@@ -15,7 +15,11 @@ setup(
         description=DESCRIPTION,
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
-        install_requires=[],
+        install_requires=[
+            "tensorflow",
+            "tensorflow_hub",
+            "scikit-learn"
+        ],
         keywords=['preprocessing', 'custom'],
         classifiers= [
             "Development Status :: 3 - Alpha",
