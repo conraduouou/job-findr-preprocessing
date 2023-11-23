@@ -1,5 +1,5 @@
 import unittest
-import preprocessing as pre
+from preprocessing import preprocessing as pre
 
 class TestAgePreprocessing(unittest.TestCase):
     def test_age(self):

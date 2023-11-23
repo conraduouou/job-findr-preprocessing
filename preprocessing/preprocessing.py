@@ -1,5 +1,5 @@
 from datetime import datetime
-from degree_labels import DEGREE_LABELS
+from preprocessing.degree_labels import DEGREE_LABELS
 import string
 
 __CURRENT_STRING_CONSTANTS = [ "current", "present", "now", "cur" ]

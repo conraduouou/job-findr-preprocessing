@@ -15,10 +15,6 @@ setup(
         long_description=LONG_DESCRIPTION,
         packages=find_packages(),
         install_requires=[],
-        py_modules=[
-            "degree_labels",
-            "preprocessing"
-        ],
         keywords=['preprocessing', 'custom'],
         classifiers= [
             "Development Status :: 3 - Alpha",
