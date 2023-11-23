@@ -9,6 +9,7 @@ setup(
         name="preprocessing", 
         version=VERSION,
         author="Louise Lalu",
+        license="MIT",
         author_email="louiserafaellalu@gmail.com",
         url="https://github.com/conraduouou/job-findr-preprocessing",
         description=DESCRIPTION,
