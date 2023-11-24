@@ -1,15 +1,9 @@
-# Miscellaneous
-.DS_Store
-venv
-__pycache__
-dist
-build
-*.egg-info
-*.tar
+# Ignore everything...
+*
 
-# Possible ELMo model names
-elmo
-archive
-
-elmo.py
-comp.py
+# ... except
+!/setup.py
+!/__init__.py
+!preprocessing
+!README.md
+!LICENSE
