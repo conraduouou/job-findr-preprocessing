@@ -1,6 +1,13 @@
-from datetime import datetime
-from .degree_labels import DEGREE_LABELS
+import tensorflow_hub as hub
+import tensorflow as tf
 import string
+
+from datetime import datetime
+
+from .degree_labels import DEGREE_LABELS
+
+# ELMo doesn't support eager execution
+tf.compat.v1.disable_eager_execution()
 
 __CURRENT_STRING_CONSTANTS = [ "current", "present", "now", "cur" ]
 
@@ -18,6 +25,20 @@ __MONTH_CONSTANTS = [
     "november",
     "december",
 ]
+
+__ELMO_PATH = "elmo"
+
+# Load ELMo model
+elmo = hub.Module(__ELMO_PATH)
+
+def set_elmo_path(elmo_path: str):
+    """
+    An optional function to set the relative path to the ELMo model.
+    """
+
+    global elmo
+
+    elmo = hub.Module(elmo_path)
 
 def __has_current_string(value: str) -> bool:
     for word in __CURRENT_STRING_CONSTANTS:
