@@ -3,6 +3,7 @@
 
 # ... except
 !/setup.py
+!/test.py
 !/__init__.py
 !preprocessing
 !README.md
