@@ -1,8 +1,15 @@
+# Miscellaneous
 .DS_Store
-elmo
 venv
 __pycache__
-
 dist
 build
 *.egg-info
+*.tar
+
+# Possible ELMo model names
+elmo
+archive
+
+elmo.py
+comp.py
