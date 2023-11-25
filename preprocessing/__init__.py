@@ -314,6 +314,23 @@ def prepare_soft_skills(soft_array: list[str] | None, field: str) -> float | Non
 
     return __get_max_similarity(SOFT_SKILLS_BASELINES[field], soft_array)
 
+
+def prepare_experience_role(role_array: list[str] | None) -> float | None:
+    """
+    Expects a list of roles that contains the applicant's past roles.
+
+    This function makes use of the ELMo model to compare baseline statements, ultimately
+    determining **professional** an applicant's resume seems.
+
+    This might be a flaw in the system, since it does not determine how close a hard skill
+    is to a specific role. This is a future recommendation for researchers.
+    """
+    # Return nil if array does not contain anything or if it's None
+    if not role_array or len(role_array) == 0:
+        return None
+
+    return __get_max_similarity(ROLE_BASELINES, role_array)
+
     
 def prepare_degree(degree_strs: list[str] | None) -> str | None:
     """

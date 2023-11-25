@@ -179,6 +179,23 @@ class TestSoftSkillsPreprocessing(unittest.TestCase):
         result = pre.prepare_soft_skills([], "accounting")
         assert result == None
 
+class TestRolePreprocessing(unittest.TestCase):
+    def test_soft_skills(self):
+        result = pre.prepare_experience_role(["Programmer"])
+        assert type(result) == float, type(result)
+        result = pre.prepare_experience_role(["Developer", "Database Administrator"])
+        assert type(result) == float, type(result)
+        result = pre.prepare_experience_role(["hehe"])
+        assert type(result) == float, type(result)
+    
+    def test_not_soft_skills(self):
+        # No array
+        result = pre.prepare_experience_role(None)
+        assert result == None
+        # Empty array
+        result = pre.prepare_experience_role([])
+        assert result == None
+
 
 if __name__ == '__main__':
     unittest.main()
