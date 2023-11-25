@@ -2,6 +2,10 @@
 
 Preprocessing package that contains methods and utility functions custom-made for our thesis tool, Job-FinDR.
 
+## Requirements
+
+1. An instance of ELMo must be present in the current working directory. This will be a directory containing the model and should be named "elmo".
+
 ## Steps in installation
 
 1. Run the following command in the terminal.
