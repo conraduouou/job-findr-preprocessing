@@ -1,3 +1,4 @@
+import csv
 import numpy as np
 import tensorflow_hub as hub
 import tensorflow as tf
@@ -97,6 +98,52 @@ def __force_parse_int(value: str) -> int:
             value = value.strip(string.punctuation + string.whitespace + string.ascii_letters)
     return value
 
+def __get_field(resume_data: list[str]) -> str:
+    embeddings = __get_embeddings(resume_data, JOB_FIELDS)
+    data = embeddings[0]
+    fields = embeddings[1]
+
+    max_score = -2
+    max_index = 0
+    for field_index in range(len(fields)):
+        field = fields[field_index]
+        field_mean = np.reshape(np.mean(field, axis=0), (1, -1))
+        for item in data:
+            item_mean = np.reshape(np.mean(item, axis=0), (1, -1))
+            similarity = cosine_similarity(field_mean, item_mean)
+            similarity = float(similarity.squeeze())
+
+            if similarity > max_score:
+                max_score = similarity
+                max_index = field_index
+
+    return JOB_FIELDS[max_index]
+
+def __get_embeddings(*args: list[str]) -> list[np.ndarray]:
+    to_embed = []
+
+    for arg in args:
+        to_add = elmo(
+            arg,
+            as_dict=True,
+            signature="default"
+        )["word_emb"]
+
+        to_embed.append(to_add)
+    
+    # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
+    # give us the numpy arrays yet--it has to be run in a session.
+    with tf.compat.v1.Session() as session:
+        session.run(tf.compat.v1.global_variables_initializer())
+        session.run(tf.compat.v1.tables_initializer())
+
+        to_return = []
+        for item in to_embed:
+            to_return.append(session.run(item))
+
+    return to_return
+
+
 def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     """
     Expects 2 3D numpy arrays that contains the ELMo embeddings of every token (word) in a baseline
@@ -105,25 +152,9 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     Returns a float that defines the similarity score between each statement from both arrays.
     """
 
-    embeddings1 = elmo(
-        baselines,
-        as_dict=True,
-        signature="default"
-    )["word_emb"]
-
-    embeddings2 = elmo(
-        data,
-        as_dict=True,
-        signature="default"
-    )["word_emb"]
-
-    # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
-    # give us the numpy arrays yet--it has to be run in a session.
-    with tf.compat.v1.Session() as session:
-        session.run(tf.compat.v1.global_variables_initializer())
-        session.run(tf.compat.v1.tables_initializer())
-        embeddings1 = session.run(embeddings1)
-        embeddings2 = session.run(embeddings2)
+    embeddings = __get_embeddings(baselines, data)
+    embeddings1 = embeddings[0]
+    embeddings2 = embeddings[1]
 
     # Actual similarity check using cosine
     max_score = -2
@@ -139,6 +170,67 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     
     return max_score
 
+
+def prepare_features(features: dict):
+    """
+    A utility function that runs the individual preprocessing functions and generates
+    a csv file containing the values.
+
+    The dictionary to be inputted here as an argument must have the following features as
+    string keys, with list values:
+
+    1. age
+    2. experience
+    3. experience_role
+    4. experience_years
+    5. hard_skils
+    6. soft_skills
+    7. certifications
+    8. degree
+    9. training
+    
+    If there are no values found or valid for a specific feature, supply an empty array.
+    """
+
+    job_field = __get_field(
+        features["experience"]
+        + features["experience_role"]
+        + features["hard_skills"]
+        + features["soft_skills"]
+        + features["degree"]
+        + features["certifications"]
+        + features["training"]
+    )
+
+    prepared = {
+        "age": prepare_age(features["age"]),
+        "experience": prepare_experience(features["experience"], job_field),
+        "experience_role": prepare_experience_role(features["experience_role"]),
+        "experience_years": prepare_experience_years(features["experience_years"]),
+        "hard_skills": prepare_hard_skills(features["hard_skills"], job_field),
+        "soft_skills": prepare_soft_skills(features["soft_skills"], job_field),
+        "certifications": prepare_certifications(features["certifications"]),
+        "degree": prepare_degree(features["degree"]),
+        "training": prepare_training(features["training"])
+    }
+
+    to_csv = [
+        list(prepared.keys()),
+        list(prepared.values())
+    ]
+
+    result_dir = "preprocessed_result"
+    
+    if not os.path.exists(result_dir):
+        os.makedirs(result_dir)
+    
+    file_path = os.path.join(result_dir, "result.csv")
+
+    with open(file_path, "w", newline='') as csvfile:
+        csv_writer = csv.writer(csvfile)
+        for row in to_csv:
+            csv_writer.writerow(row)
+    
 
 def prepare_age(age_strs: list[str] | None) -> int | str:
     """

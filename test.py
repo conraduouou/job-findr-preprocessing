@@ -1,3 +1,4 @@
+import os
 import unittest
 import preprocessing as pre
 
@@ -179,6 +180,7 @@ class TestSoftSkillsPreprocessing(unittest.TestCase):
         result = pre.prepare_soft_skills([], "accounting")
         assert result == None
 
+
 class TestRolePreprocessing(unittest.TestCase):
     def test_soft_skills(self):
         result = pre.prepare_experience_role(["Programmer"])
@@ -195,6 +197,23 @@ class TestRolePreprocessing(unittest.TestCase):
         # Empty array
         result = pre.prepare_experience_role([])
         assert result == None
+
+
+class TestAllPreprocessing(unittest.TestCase):
+    def test_prepare(self):
+        pre.prepare_features({
+            "age": ["12"],
+            "experience": ["Great at doing things."],
+            "experience_years": ["2020-2022"],
+            "experience_role": ["Developer"],
+            "hard_skills": ["Python"],
+            "soft_skills": ["Creative"],
+            "certifications": ["Another"],
+            "training": ["another"],
+            "degree": [""]
+        })
+
+        assert os.path.exists("preprocessed_result")
 
 
 if __name__ == '__main__':
