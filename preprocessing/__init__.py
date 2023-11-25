@@ -187,6 +187,9 @@ def prepare_degree(degree_strs: list[str]) -> str | None:
     Expects a string that contains information regarding the applicant's finished course.
 
     This should return a value within the scope of the DEGREE_LABELS constant dict.
+
+    *NOTE*: This returns THE FIRST VALID DEGREE FOUND from the list. Once found, all subsequent
+    values in the list are disregarded.
     """
     for degree_str in degree_strs:
         words = degree_str.strip(string.punctuation + string.digits).lower().split()
