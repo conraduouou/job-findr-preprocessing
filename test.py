@@ -3,47 +3,47 @@ import preprocessing as pre
 
 class TestAgePreprocessing(unittest.TestCase):
     def test_age(self):
-        result = pre.prepare_age("12")
+        result = pre.prepare_age(["12"])
         assert type(result) == int
-        result = pre.prepare_age("0")
+        result = pre.prepare_age(["0"])
         assert type(result) == int
     
     def test_negative(self):
-        result = pre.prepare_age("-1")
+        result = pre.prepare_age(["-1"])
         assert result > 0
 
     def test_age_with_whitespace(self):
-        result = pre.prepare_age("12  ")
+        result = pre.prepare_age(["12  "])
         assert type(result) == int
-        result = pre.prepare_age("12  \n")
+        result = pre.prepare_age(["12  \n"])
         assert type(result) == int
 
     def test_age_with_special_character(self):
-        result = pre.prepare_age("12|")
+        result = pre.prepare_age(["12|"])
         assert type(result) == int
-        result = pre.prepare_age("-++-+++==45!)|||")
+        result = pre.prepare_age(["-++-+++==45!)|||"])
         assert type(result) == int
 
     def test_not_age(self):
-        result = pre.prepare_age("says what on your bun")
+        result = pre.prepare_age(["says what on your bun"])
         assert result == "N/A"
-        result = pre.prepare_age("...,, // ))")
+        result = pre.prepare_age(["...,, // ))"])
         assert result == "N/A"
 
 
 class TestCertificationsPreprocessing(unittest.TestCase):
     def test_certifications(self):
-        result = pre.prepare_certifications(2)
+        result = pre.prepare_certifications(["dummy value"])
         assert result
-        result = pre.prepare_certifications(0)
+        result = pre.prepare_certifications([])
         assert not result
 
 
 class TestTrainingPreprocessing(unittest.TestCase):
     def test_training(self):
-        result = pre.prepare_training(2)
+        result = pre.prepare_training(["dummy value"])
         assert result
-        result = pre.prepare_training(0)
+        result = pre.prepare_training([])
         assert not result
 
 
@@ -101,19 +101,40 @@ class TestExperienceYearsPreprocessing(unittest.TestCase):
 
 class TestDegreePreprocessing(unittest.TestCase):
     def test_degree(self):
-        result = pre.prepare_degree("Bachelor in Computer Science")
+        result = pre.prepare_degree(["Bachelor in Computer Science"])
         assert result == "computer science"
-        result = pre.prepare_degree("00== 1 history")
+        result = pre.prepare_degree(["00== 1 history"])
         assert result == "history"
-        result = pre.prepare_degree("history")
+        result = pre.prepare_degree(["history"])
         assert result == "history"
-        result = pre.prepare_degree("polsci")
+        result = pre.prepare_degree(["polsci"])
         assert result == "political science"
-        result = pre.prepare_degree("bspa")
+        result = pre.prepare_degree(["bspa"])
         assert result == "public administration"
-        result = pre.prepare_degree("hrm")
+        result = pre.prepare_degree(["hrm"])
         assert result == "hotel and restaurant management"
-        result = pre.prepare_degree("")
+        result = pre.prepare_degree([""])
+        assert result == None
+
+
+class TestExperiencePreprocessing(unittest.TestCase):
+    def test_experience(self):
+        result = pre.prepare_experience(["Worked in a fast food restaurant."], "human resource")
+        assert type(result) == float, type(result)
+        result = pre.prepare_experience(["Worked in a fast food restaurant.", "Worked in another fast food restaurant."], "human resource")
+        assert type(result) == float, type(result)
+        result = pre.prepare_experience(["What"], "human resource")
+        assert type(result) == float, type(result)
+    
+    def test_not_experience(self):
+        # No array
+        result = pre.prepare_experience(None, "accounting")
+        assert result == None
+        # Invalid field
+        result = pre.prepare_experience(None, "what are you doing")
+        assert result == None
+        # Empty array
+        result = pre.prepare_experience([], "accounting")
         assert result == None
 
 

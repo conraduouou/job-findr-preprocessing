@@ -1,10 +1,13 @@
+import numpy as np
 import tensorflow_hub as hub
 import tensorflow as tf
 import string
 
 from datetime import datetime
+from sklearn.metrics.pairwise import cosine_similarity
 
 from .degree_labels import DEGREE_LABELS
+from .baselines import *
 
 # ELMo doesn't support eager execution
 tf.compat.v1.disable_eager_execution()
@@ -80,6 +83,26 @@ def __force_parse_int(value: str) -> int:
         except ValueError:
             value = value.strip(string.punctuation + string.whitespace + string.ascii_letters)
     return value
+
+def __get_max_similarity(embeddings1: np.ndarray, embeddings2: np.ndarray) -> float:
+    """
+    Expects 2 3D numpy arrays that contains the ELMo embeddings of every token (word) in a baseline
+    or the actual value in the 3rd axis.
+
+    Returns a float that defines the similarity score between each statement from both arrays.
+    """
+    max_score = -2
+    for emb1 in embeddings1:
+        emb1_mean = np.reshape(np.mean(emb1, axis=0), (1, -1))
+        for emb2 in embeddings2:
+            emb2_mean = np.reshape(np.mean(emb2, axis=0), (1, -1))
+            similarity = cosine_similarity(emb1_mean, emb2_mean)
+            similarity = float(similarity.squeeze())
+
+            if similarity > max_score:
+                max_score = similarity
+    
+    return max_score
 
 
 def prepare_age(age_strs: list[str] | None) -> int | str:
@@ -215,10 +238,41 @@ def prepare_experience_years(years_array: list[str]) -> int | None:
     return max(experience_years, summary_years)
 
 
-def prepare_experience(experience_array: list[str]) -> float | None:
+def prepare_experience(experience_array: list[str] | None, field: str) -> float | None:
+    """
+    Expects a list of experiences that contains the applicant's experience data.
+
+    This function makes use of the ELMo model to compare baseline statements, ultimately
+    determining **professional** an applicant's resume seems.
+
+    This might be a flaw in the system, since it does not determine how close an experience
+    is to a specific role. This is a future recommendation for researchers.
+    """
     # Return nil if array does not contain anything or if it's None
-    if not experience_array or len(experience_array) == 0:
+    if not experience_array or len(experience_array) == 0 or field not in JOB_FIELDS:
         return None
+    
+    baselines_emb = elmo(
+        EXPERIENCE_BASELINES[field],
+        as_dict=True,
+        signature="default"
+    )["word_emb"]
+
+    experiences_emb = elmo(
+        experience_array,
+        as_dict=True,
+        signature="default"
+    )["word_emb"]
+
+    # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
+    # give us the numpy arrays yet--it has to be run in a session.
+    with tf.compat.v1.Session() as session:
+        session.run(tf.compat.v1.global_variables_initializer())
+        session.run(tf.compat.v1.tables_initializer())
+        baselines_emb = session.run(baselines_emb)
+        experiences_emb = session.run(experiences_emb)
+
+    return __get_max_similarity(baselines_emb, experiences_emb)
 
     
 def prepare_degree(degree_strs: list[str] | None) -> str | None:
