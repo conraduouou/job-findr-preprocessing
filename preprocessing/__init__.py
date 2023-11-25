@@ -182,35 +182,36 @@ def prepare_experience_years(years_array: list[str]) -> int:
     return max(experience_years, summary_years)
 
 
-def prepare_degree(degree_str: str) -> str | None:
+def prepare_degree(degree_strs: list[str]) -> str | None:
     """
     Expects a string that contains information regarding the applicant's finished course.
 
     This should return a value within the scope of the DEGREE_LABELS constant dict.
     """
-    words = degree_str.strip(string.punctuation + string.digits).lower().split()
-    word_count = len(words)
+    for degree_str in degree_strs:
+        words = degree_str.strip(string.punctuation + string.digits).lower().split()
+        word_count = len(words)
 
-    for index in range(word_count):
-        current_word = words[index]
+        for index in range(word_count):
+            current_word = words[index]
 
-        for label, options in DEGREE_LABELS.items():
-            name_tokens = options["name"]
-            abbreviations = options["abbr"]
+            for label, options in DEGREE_LABELS.items():
+                name_tokens = options["name"]
+                abbreviations = options["abbr"]
 
-            # check if there's a match in the created LABELS constant
-            if len(name_tokens) <= word_count - index:
-                is_match = True
-                for j in range(len(name_tokens)):
-                    if name_tokens[j] != words[index + j]:
-                        is_match = False
-                        break
+                # check if there's a match in the created LABELS constant
+                if len(name_tokens) <= word_count - index:
+                    is_match = True
+                    for j in range(len(name_tokens)):
+                        if name_tokens[j] != words[index + j]:
+                            is_match = False
+                            break
+                    
+                    if is_match:
+                        return label
                 
-                if is_match:
-                    return label
-            
-            # check if current word is in abbreviated form, in which case the
-            # label should be returned as well.
-            for j in range(len(abbreviations)): 
-                if current_word == abbreviations[j]:
-                    return label
+                # check if current word is in abbreviated form, in which case the
+                # label should be returned as well.
+                for j in range(len(abbreviations)): 
+                    if current_word == abbreviations[j]:
+                        return label
