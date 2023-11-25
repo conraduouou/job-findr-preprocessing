@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow_hub as hub
 import tensorflow as tf
+import os
 import string
 
 from datetime import datetime
@@ -31,6 +32,15 @@ __MONTH_CONSTANTS = [
 
 __ELMO_PATH = "elmo"
 
+def __check_elmo_model() -> bool:
+    current_dir = os.getcwd()
+    elmo_path = os.path.join(current_dir, __ELMO_PATH)
+    return os.path.isdir(elmo_path)
+
+# check path if elmo model exists
+if not __check_elmo_model():
+    raise FileNotFoundError("A path to a ELMo is required to run this package.")
+
 # Load ELMo model
 elmo = hub.Module(__ELMO_PATH)
 
@@ -40,6 +50,9 @@ def set_elmo_path(elmo_path: str):
     """
 
     global elmo
+
+    if not __check_elmo_model():
+        raise FileNotFoundError("A path to a ELMo is required to run this package.")
 
     elmo = hub.Module(elmo_path)
 
