@@ -91,13 +91,13 @@ def prepare_certifications(count: int) -> bool:
     return count > 0
 
 
-def prepare_training(count: int) -> bool:
+def prepare_training(training_array: list[str]) -> bool:
     """
-    Expects an integer that defines how many training data were found in the resume.
+    Expects a list of strings that contains the applicant's training data.
 
     If there is at least one (1) training data found, then return True.
     """
-    return count > 0
+    return len(training_array) > 0
 
 
 def prepare_experience_years(years_array: list[str]) -> int:
