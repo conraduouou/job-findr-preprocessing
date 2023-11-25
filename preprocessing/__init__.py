@@ -61,25 +61,29 @@ def __force_parse_int(value: str) -> int:
     return value
 
 
-def prepare_age(age_string: str) -> int | str:
+def prepare_age(age_strs: list[str]) -> int | str:
     """
     Expects a string with which the applicant's age will be inferred.
 
     Knowing this will be received from LayoutLM, various forms of this string
     should be considered, thoroughly tested.
+
+    *NOTE*: This returns THE FIRST VALID AGE FOUND from the list. Once found, all subsequent
+    values in the list are disregarded.
     """
 
-    # remove special characters from both ends
-    # handy, since this also removes a dash (minus, hyphen) character, so as to
-    # prevent negative numbers from being output
-    age = age_string.strip(string.punctuation)
-    
-    try:
-        age = int(age)
-    except ValueError:
-        return "N/A"
-    
-    return age
+    for age_str in age_strs:
+        # remove special characters from both ends
+        # handy, since this also removes a dash (minus, hyphen) character, so as to
+        # prevent negative numbers from being output
+        age = age_str.strip(string.punctuation)
+        
+        try:
+            age = int(age)
+        except ValueError:
+            return "N/A"
+        
+        return age
 
 
 def prepare_certifications(cert_array: list[str]) -> bool:
