@@ -82,13 +82,13 @@ def prepare_age(age_string: str) -> int | str:
     return age
 
 
-def prepare_certifications(count: int) -> bool:
+def prepare_certifications(cert_array: list[str]) -> bool:
     """
-    Expects an integer that defines how many certifications were found in the resume.
+    Expects a list of strings that contains the applicant's certifications.
 
     If there is at least one (1) certification found, then return True.
     """
-    return count > 0
+    return len(cert_array) > 0
 
 
 def prepare_training(training_array: list[str]) -> bool:
