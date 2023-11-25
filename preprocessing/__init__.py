@@ -61,7 +61,7 @@ def __force_parse_int(value: str) -> int:
     return value
 
 
-def prepare_age(age_strs: list[str]) -> int | str:
+def prepare_age(age_strs: list[str] | None) -> int | str:
     """
     Expects a string with which the applicant's age will be inferred.
 
@@ -71,6 +71,10 @@ def prepare_age(age_strs: list[str]) -> int | str:
     *NOTE*: This returns THE FIRST VALID AGE FOUND from the list. Once found, all subsequent
     values in the list are disregarded.
     """
+
+    # Return nil if array does not contain anything or if it's None
+    if not age_strs or len(age_strs) == 0:
+        return None
 
     for age_str in age_strs:
         # remove special characters from both ends
@@ -86,25 +90,25 @@ def prepare_age(age_strs: list[str]) -> int | str:
         return age
 
 
-def prepare_certifications(cert_array: list[str]) -> bool:
+def prepare_certifications(cert_array: list[str] | None) -> bool:
     """
     Expects a list of strings that contains the applicant's certifications.
 
     If there is at least one (1) certification found, then return True.
     """
-    return len(cert_array) > 0
+    return cert_array != None and len(cert_array) > 0
 
 
-def prepare_training(training_array: list[str]) -> bool:
+def prepare_training(training_array: list[str] | None) -> bool:
     """
     Expects a list of strings that contains the applicant's training data.
 
     If there is at least one (1) training data found, then return True.
     """
-    return len(training_array) > 0
+    return training_array != None and len(training_array) > 0
 
 
-def prepare_experience_years(years_array: list[str]) -> int:
+def prepare_experience_years(years_array: list[str]) -> int | None:
     """
     Expects a list of string values acquired by LayoutLM.
 
@@ -113,6 +117,10 @@ def prepare_experience_years(years_array: list[str]) -> int:
 
     Preprocessing should at least be able to cater to common forms.
     """
+
+    # Return nil if array does not contain anything or if it's None
+    if not years_array or len(years_array) == 0:
+        return None
 
     # if years of experience is mentioned somewhere in the summary, we'll return
     # this instead. We can't make sure, however. That's why we'll still loop through
@@ -186,7 +194,7 @@ def prepare_experience_years(years_array: list[str]) -> int:
     return max(experience_years, summary_years)
 
 
-def prepare_degree(degree_strs: list[str]) -> str | None:
+def prepare_degree(degree_strs: list[str] | None) -> str | None:
     """
     Expects a string that contains information regarding the applicant's finished course.
 
@@ -195,6 +203,11 @@ def prepare_degree(degree_strs: list[str]) -> str | None:
     *NOTE*: This returns THE FIRST VALID DEGREE FOUND from the list. Once found, all subsequent
     values in the list are disregarded.
     """
+
+    # Return nil if array does not contain anything or if it's None
+    if not degree_strs or len(degree_strs) == 0:
+        return None
+    
     for degree_str in degree_strs:
         words = degree_str.strip(string.punctuation + string.digits).lower().split()
         word_count = len(words)
