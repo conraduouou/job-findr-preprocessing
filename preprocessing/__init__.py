@@ -252,6 +252,10 @@ def prepare_experience(experience_array: list[str] | None, field: str) -> float 
     if not experience_array or len(experience_array) == 0 or field not in JOB_FIELDS:
         return None
     
+    # clean data
+    for experience in experience_array:
+        experience = experience.strip(string.punctuation + string.whitespace)
+    
     baselines_emb = elmo(
         EXPERIENCE_BASELINES[field],
         as_dict=True,
