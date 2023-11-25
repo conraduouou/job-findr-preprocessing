@@ -300,7 +300,7 @@ def prepare_hard_skills(hard_array: list[str] | None, field: str) -> float | Non
 
 def prepare_soft_skills(soft_array: list[str] | None, field: str) -> float | None:
     """
-    Expects a list of hard skills that contains the applicant's hard skills data.
+    Expects a list of soft skills that contains the applicant's soft skills data.
 
     This function makes use of the ELMo model to compare baseline statements, ultimately
     determining **professional** an applicant's resume seems.
