@@ -215,6 +215,12 @@ def prepare_experience_years(years_array: list[str]) -> int | None:
     return max(experience_years, summary_years)
 
 
+def prepare_experience(experience_array: list[str]) -> float | None:
+    # Return nil if array does not contain anything or if it's None
+    if not experience_array or len(experience_array) == 0:
+        return None
+
+    
 def prepare_degree(degree_strs: list[str] | None) -> str | None:
     """
     Expects a string that contains information regarding the applicant's finished course.

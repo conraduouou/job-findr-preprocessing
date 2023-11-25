@@ -5,6 +5,7 @@
 !/setup.py
 !/test.py
 !/__init__.py
-!preprocessing
+!preprocessing/
+!preprocessing/*
 !README.md
 !LICENSE
