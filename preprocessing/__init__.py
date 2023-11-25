@@ -84,13 +84,35 @@ def __force_parse_int(value: str) -> int:
             value = value.strip(string.punctuation + string.whitespace + string.ascii_letters)
     return value
 
-def __get_max_similarity(embeddings1: np.ndarray, embeddings2: np.ndarray) -> float:
+def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     """
     Expects 2 3D numpy arrays that contains the ELMo embeddings of every token (word) in a baseline
     or the actual value in the 3rd axis.
 
     Returns a float that defines the similarity score between each statement from both arrays.
     """
+
+    embeddings1 = elmo(
+        baselines,
+        as_dict=True,
+        signature="default"
+    )["word_emb"]
+
+    embeddings2 = elmo(
+        data,
+        as_dict=True,
+        signature="default"
+    )["word_emb"]
+
+    # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
+    # give us the numpy arrays yet--it has to be run in a session.
+    with tf.compat.v1.Session() as session:
+        session.run(tf.compat.v1.global_variables_initializer())
+        session.run(tf.compat.v1.tables_initializer())
+        embeddings1 = session.run(embeddings1)
+        embeddings2 = session.run(embeddings2)
+
+    # Actual similarity check using cosine
     max_score = -2
     for emb1 in embeddings1:
         emb1_mean = np.reshape(np.mean(emb1, axis=0), (1, -1))
@@ -255,28 +277,25 @@ def prepare_experience(experience_array: list[str] | None, field: str) -> float 
     # clean data
     for experience in experience_array:
         experience = experience.strip(string.punctuation + string.whitespace)
-    
-    baselines_emb = elmo(
-        EXPERIENCE_BASELINES[field],
-        as_dict=True,
-        signature="default"
-    )["word_emb"]
 
-    experiences_emb = elmo(
-        experience_array,
-        as_dict=True,
-        signature="default"
-    )["word_emb"]
+    return __get_max_similarity(EXPERIENCE_BASELINES[field], experience_array)
 
-    # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
-    # give us the numpy arrays yet--it has to be run in a session.
-    with tf.compat.v1.Session() as session:
-        session.run(tf.compat.v1.global_variables_initializer())
-        session.run(tf.compat.v1.tables_initializer())
-        baselines_emb = session.run(baselines_emb)
-        experiences_emb = session.run(experiences_emb)
 
-    return __get_max_similarity(baselines_emb, experiences_emb)
+def prepare_hard_skills(hard_array: list[str] | None, field: str) -> float | None:
+    """
+    Expects a list of hard skills that contains the applicant's hard skills data.
+
+    This function makes use of the ELMo model to compare baseline statements, ultimately
+    determining **professional** an applicant's resume seems.
+
+    This might be a flaw in the system, since it does not determine how close a hard skill
+    is to a specific role. This is a future recommendation for researchers.
+    """
+    # Return nil if array does not contain anything or if it's None
+    if not hard_array or len(hard_array) == 0 or field not in JOB_FIELDS:
+        return None
+
+    return __get_max_similarity(HARD_SKILLS_BASELINES[field], hard_array)
 
     
 def prepare_degree(degree_strs: list[str] | None) -> str | None:

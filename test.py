@@ -138,5 +138,26 @@ class TestExperiencePreprocessing(unittest.TestCase):
         assert result == None
 
 
+class TestHardSkillsPreprocessing(unittest.TestCase):
+    def test_hard_skills(self):
+        result = pre.prepare_hard_skills(["Skilled in communication"], "human resource")
+        assert type(result) == float, type(result)
+        result = pre.prepare_hard_skills(["People skills", "Backstabbing"], "human resource")
+        assert type(result) == float, type(result)
+        result = pre.prepare_hard_skills(["hehe"], "human resource")
+        assert type(result) == float, type(result)
+    
+    def test_not_hard_skills(self):
+        # No array
+        result = pre.prepare_hard_skills(None, "accounting")
+        assert result == None
+        # Invalid field
+        result = pre.prepare_hard_skills(None, "what are you doing")
+        assert result == None
+        # Empty array
+        result = pre.prepare_hard_skills([], "accounting")
+        assert result == None
+
+
 if __name__ == '__main__':
     unittest.main()
