@@ -232,7 +232,7 @@ def prepare_features(features: dict):
             csv_writer.writerow(row)
     
 
-def prepare_age(age_strs: list[str] | None) -> int | str:
+def prepare_age(age_strs: list[str] | None) -> int | None:
     """
     Expects a string with which the applicant's age will be inferred.
 
@@ -256,7 +256,7 @@ def prepare_age(age_strs: list[str] | None) -> int | str:
         try:
             age = int(age)
         except ValueError:
-            return "N/A"
+            return None
         
         return age
 

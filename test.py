@@ -24,6 +24,8 @@ class TestAgePreprocessing(unittest.TestCase):
         assert type(result) == int
         result = pre.prepare_age(["-++-+++==45!)|||"])
         assert type(result) == int
+        result = pre.prepare_age(["__12]]"])
+        assert type(result) == int
 
     def test_not_age(self):
         result = pre.prepare_age(["says what on your bun"])
