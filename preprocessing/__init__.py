@@ -42,20 +42,17 @@ def __check_elmo_model() -> bool:
 if not __check_elmo_model():
     raise FileNotFoundError("A path to a ELMo is required to run this package.")
 
-# Load ELMo model
-elmo = hub.Module(__ELMO_PATH)
+# def set_elmo_path(elmo_path: str):
+#     """
+#     An optional function to set the relative path to the ELMo model.
+#     """
 
-def set_elmo_path(elmo_path: str):
-    """
-    An optional function to set the relative path to the ELMo model.
-    """
+#     global elmo
 
-    global elmo
+#     if not __check_elmo_model():
+#         raise FileNotFoundError("A path to a ELMo is required to run this package.")
 
-    if not __check_elmo_model():
-        raise FileNotFoundError("A path to a ELMo is required to run this package.")
-
-    elmo = hub.Module(elmo_path)
+#     elmo = hub.Module(elmo_path)
 
 def __has_current_string(value: str) -> bool:
     for word in __CURRENT_STRING_CONSTANTS:
@@ -120,22 +117,29 @@ def __get_field(resume_data: list[str]) -> str:
     return JOB_FIELDS[max_index]
 
 def __get_embeddings(*args: list[str]) -> list[np.ndarray]:
-    to_embed = []
+    graph = tf.Graph()
+    with graph.as_default():
+        # Load ELMo model
+        elmo = hub.Module(__ELMO_PATH)
 
-    for arg in args:
-        to_add = elmo(
-            arg,
-            as_dict=True,
-            signature="default"
-        )["word_emb"]
+        to_embed = []
 
-        to_embed.append(to_add)
+        for arg in args:
+            to_add = elmo(
+                arg,
+                as_dict=True,
+                signature="default"
+            )["word_emb"]
+
+            to_embed.append(to_add)
+        
+        init_op = tf.group([tf.compat.v1.global_variables_initializer(), tf.compat.v1.tables_initializer()])
+    graph.finalize()
     
     # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
     # give us the numpy arrays yet--it has to be run in a session.
-    with tf.compat.v1.Session() as session:
-        session.run(tf.compat.v1.global_variables_initializer())
-        session.run(tf.compat.v1.tables_initializer())
+    with tf.compat.v1.Session(graph=graph) as session:
+        session.run(init_op)
 
         to_return = []
         for item in to_embed:
