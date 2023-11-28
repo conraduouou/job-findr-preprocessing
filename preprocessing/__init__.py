@@ -265,22 +265,22 @@ def prepare_age(age_strs: list[str] | None) -> int | None:
         return age
 
 
-def prepare_certifications(cert_array: list[str] | None) -> bool:
+def prepare_certifications(cert_array: list[str] | None) -> str:
     """
     Expects a list of strings that contains the applicant's certifications.
 
-    If there is at least one (1) certification found, then return True.
+    If there is at least one (1) certification found, then return TRUE (string).
     """
-    return cert_array != None and len(cert_array) > 0
+    return str(cert_array != None and len(cert_array) > 0).upper()
 
 
-def prepare_training(training_array: list[str] | None) -> bool:
+def prepare_training(training_array: list[str] | None) -> str:
     """
     Expects a list of strings that contains the applicant's training data.
 
-    If there is at least one (1) training data found, then return True.
+    If there is at least one (1) training data found, then return TRUE (string).
     """
-    return training_array != None and len(training_array) > 0
+    return str(training_array != None and len(training_array) > 0).upper()
 
 
 def prepare_experience_years(years_array: list[str]) -> int | None:
