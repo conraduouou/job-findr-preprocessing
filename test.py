@@ -29,25 +29,25 @@ class TestAgePreprocessing(unittest.TestCase):
 
     def test_not_age(self):
         result = pre.prepare_age(["says what on your bun"])
-        assert result == "N/A"
+        assert not result
         result = pre.prepare_age(["...,, // ))"])
-        assert result == "N/A"
+        assert not result
 
 
 class TestCertificationsPreprocessing(unittest.TestCase):
     def test_certifications(self):
         result = pre.prepare_certifications(["dummy value"])
-        assert result
+        assert result == "TRUE"
         result = pre.prepare_certifications([])
-        assert not result
+        assert result == "FALSE"
 
 
 class TestTrainingPreprocessing(unittest.TestCase):
     def test_training(self):
         result = pre.prepare_training(["dummy value"])
-        assert result
+        assert result == "TRUE"
         result = pre.prepare_training([])
-        assert not result
+        assert result == "FALSE"
 
 
 class TestExperienceYearsPreprocessing(unittest.TestCase):

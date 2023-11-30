@@ -175,7 +175,7 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     return max_score
 
 
-def prepare_features(features: dict):
+def prepare_features(features: dict, is_common: bool=False):
     """
     A utility function that runs the individual preprocessing functions and generates
     a csv file containing the values.
@@ -215,8 +215,17 @@ def prepare_features(features: dict):
         "soft_skills": prepare_soft_skills(features["soft_skills"], job_field),
         "certifications": prepare_certifications(features["certifications"]),
         "degree": prepare_degree(features["degree"]),
-        "training": prepare_training(features["training"])
+        "training": prepare_training(features["training"]),
+        "job_field": job_field,
     }
+
+    if is_common:
+        del prepared["experience"]
+        del prepared["experience_years"]
+        del prepared["hard_skills"]
+        del prepared["soft_skills"]
+        del prepared["certifications"]
+        del prepared["training"]
 
     to_csv = [
         list(prepared.keys()),
