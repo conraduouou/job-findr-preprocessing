@@ -1,10 +1,10 @@
-__ACCOUNTING = "accounting"
-__HUMAN_RESOURCE = "human resource"
-__ARTS_MEDIA = "arts media"
+__ACCOUNTING = "accounting & finance"
+__HUMAN_RESOURCE = "hr & admin"
+__ARTS_MEDIA = "arts & communication"
 __EDUCATION = "education"
-__TECHNOLOGY = "technology"
+__TECHNOLOGY = "computer & it"
 __ENGINEERING = "engineering"
-__HEALTH = "health"
+__HEALTH = "healthcare"
 __SERVICES = "services"
 
 
