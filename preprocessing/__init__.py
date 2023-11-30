@@ -208,6 +208,7 @@ def prepare_features(features: dict, is_common: bool=False):
 
     prepared = {
         "age": prepare_age(features["age"]),
+        "sex": features["sex"],
         "experience": prepare_experience(features["experience"], job_field),
         "experience_role": prepare_experience_role(features["experience_role"]),
         "experience_years": prepare_experience_years(features["experience_years"]),
