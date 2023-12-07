@@ -16,8 +16,9 @@ Preprocessing package that contains methods and utility functions custom-made fo
 2. This should then give you the `preprocessing` package made for Job-FinDR. To confirm its functionality, you can run the following command in your terminal:
     ```
     python -c "import preprocessing as pre; print(pre.prepare_age([\"__12]]\"]))"
-    # Should output "12"
     ```
+
+    The above code should output "12" in the terminal.
 
 ## The most important function
 
