@@ -40,7 +40,8 @@ To run it as I have intended, you have to supply a dictionary argument that cont
 valid value for a given feature, supply an empty array instead.
 
 This is effective when preprocessing a single set of resume data. For preprocessing multiple resume data, it should be in the form of a
-csv, where rows denote each resume and columns defining the feature.
+csv, where rows denote each resume and columns defining the feature. Instead of supplying a dictionary argument in the `prepare_features`
+function, supply the path to the csv to be prepared.
 
 ## Sample CSV data:
 ```csv
