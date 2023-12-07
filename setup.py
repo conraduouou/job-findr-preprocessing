@@ -18,7 +18,8 @@ setup(
         install_requires=[
             "tensorflow",
             "tensorflow_hub",
-            "scikit-learn"
+            "scikit-learn",
+            "pandas"
         ],
         keywords=['preprocessing', 'custom'],
         classifiers= [
