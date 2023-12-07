@@ -26,13 +26,14 @@ All you need with this package, really, is just the `prepare_features` function.
 To run it as I have intended, you have to supply a dictionary argument that contains all the features as string keys:
 
 1. age
-2. experience
-3. experience_role
-4. experience_years
-5. hard_skills
-6. soft_skills
-7. certifications
-8. training
-9. degree
+2. sex
+3. experience
+4. experience_role
+5. experience_years
+6. hard_skills
+7. soft_skills
+8. certifications
+9. training
+10. degree
 
 ... with each key having a list (array) value of strings. If there is no valid value for a given feature, supply an empty array instead.

@@ -1,5 +1,6 @@
 import csv
 import numpy as np
+import pandas as pd
 import tensorflow_hub as hub
 import tensorflow as tf
 import os
@@ -175,49 +176,29 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     return max_score
 
 
-def prepare_features(features: dict, is_common: bool=False):
-    """
-    A utility function that runs the individual preprocessing functions and generates
-    a csv file containing the values.
-
-    The dictionary to be inputted here as an argument must have the following features as
-    string keys, with list values:
-
-    1. age
-    2. experience
-    3. experience_role
-    4. experience_years
-    5. hard_skils
-    6. soft_skills
-    7. certifications
-    8. degree
-    9. training
-    
-    If there are no values found or valid for a specific feature, supply an empty array.
-    """
-
+def __get_prepared(data: dict, is_common=False) -> dict:
     job_field = __get_field(
-        features["experience"]
-        + features["experience_role"]
-        + features["hard_skills"]
-        + features["soft_skills"]
-        + features["degree"]
-        + features["certifications"]
-        + features["training"]
+        data["experience"]
+        + data["experience_role"]
+        + data["hard_skills"]
+        + data["soft_skills"]
+        + data["degree"]
+        + data["certifications"]
+        + data["training"]
     )
 
     prepared = {
-        "age": prepare_age(features["age"]),
-        "sex": features["sex"],
-        "experience": prepare_experience(features["experience"], job_field),
-        "experience_role": prepare_experience_role(features["experience_role"]),
-        "experience_years": prepare_experience_years(features["experience_years"]),
-        "hard_skills": prepare_hard_skills(features["hard_skills"], job_field),
-        "soft_skills": prepare_soft_skills(features["soft_skills"], job_field),
-        "certifications": prepare_certifications(features["certifications"]),
-        "degree": prepare_degree(features["degree"]),
-        "training": prepare_training(features["training"]),
-        "job_field": job_field,
+        "age": [prepare_age(data["age"])],
+        "sex": [data["sex"]],
+        "experience": [prepare_experience(data["experience"], job_field)],
+        "experience_role": [prepare_experience_role(data["experience_role"])],
+        "experience_years": [prepare_experience_years(data["experience_years"])],
+        "hard_skills": [prepare_hard_skills(data["hard_skills"], job_field)],
+        "soft_skills": [prepare_soft_skills(data["soft_skills"], job_field)],
+        "certifications": [prepare_certifications(data["certifications"])],
+        "degree": [prepare_degree(data["degree"])],
+        "training": [prepare_training(data["training"])],
+        "job_field": [job_field],
     }
 
     if is_common:
@@ -228,10 +209,76 @@ def prepare_features(features: dict, is_common: bool=False):
         del prepared["certifications"]
         del prepared["training"]
 
+    return prepared
+
+
+def prepare_features(features: dict | str, is_common: bool=False):
+    """
+    A utility function that runs the individual preprocessing functions and generates
+    a csv file containing the values.
+
+    The `features` argument can either be of type `dict` or `str`. If it's a string, then
+    it is assumed to be a path to the csv containing data of a resume per row.
+    
+    The dictionary to be inputted here as an argument must have the following features as
+    string keys, with list values:
+
+    1. age
+    2. sex
+    3. experience
+    4. experience_role
+    5. experience_years
+    6. hard_skils
+    7. soft_skills
+    8. certifications
+    9. degree
+    10. training
+    
+    If there are no values found or valid for a specific feature, supply an empty array.
+
+    If the data is generated from a csv file, the continuous values will be expected to have
+    a phrase or sentence belonging to a feature. These values are experience, experience_role,
+    hard_skills, soft_skills, certifications, and training, which are all expected to have
+    multiple values in a real life application.
+    
+    For convenience purposes, the data inputted in the csv are expected to be THE CLOSEST 
+    SOUNDING TO BEING PROFESSIONAL, as the numerical value converted from the continuous value
+    is acquired through `max` anyway, not the mean. Judge whether each statement is indeed the
+    closest to being professional as best as you can.
+    """
+
+    if type(features) == str:
+        df = pd.read_csv(features)
+        output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
+        prepared = {}
+        for data in output:
+            processed = __get_prepared(data, is_common)
+            if not prepared:
+                prepared = processed
+            else:
+                for key, value in processed.items():
+                    prepared[key].extend(value)
+
     to_csv = [
         list(prepared.keys()),
-        list(prepared.values())
     ]
+
+    for index in range(len(prepared["age"])):
+        to_csv.append(
+            [
+                prepared["age"][index],
+                prepared["sex"][index],
+                prepared["experience"][index],
+                prepared["experience_role"][index],
+                prepared["experience_years"][index],
+                prepared["hard_skills"][index],
+                prepared["soft_skills"][index],
+                prepared["certifications"][index],
+                prepared["degree"][index],
+                prepared["training"][index],
+                prepared["job_field"][index],
+            ]
+        )
 
     result_dir = "preprocessed_result"
     
