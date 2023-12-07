@@ -258,27 +258,16 @@ def prepare_features(features: dict | str, is_common: bool=False):
             else:
                 for key, value in processed.items():
                     prepared[key].extend(value)
+    else:
+        prepared = __get_prepared(data, is_common)
 
     to_csv = [
         list(prepared.keys()),
     ]
 
-    for index in range(len(prepared["age"])):
-        to_csv.append(
-            [
-                prepared["age"][index],
-                prepared["sex"][index],
-                prepared["experience"][index],
-                prepared["experience_role"][index],
-                prepared["experience_years"][index],
-                prepared["hard_skills"][index],
-                prepared["soft_skills"][index],
-                prepared["certifications"][index],
-                prepared["degree"][index],
-                prepared["training"][index],
-                prepared["job_field"][index],
-            ]
-        )
+    to_csv.extend(
+        [ [ prepared[k][i] for k in prepared.keys() ] for i in range(len(prepared["age"])) ]
+    )
 
     result_dir = "preprocessed_result"
     
