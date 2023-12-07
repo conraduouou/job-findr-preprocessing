@@ -14,7 +14,7 @@ DEGREE_LABELS = {
   "computer science": { "name": ["computer", "science"], "abbr": ["bscs"] },
   "economics": { "name": ["economics"], "abbr": [] },
   "electrical engineering": { "name": ["electrical", "engineering"], "abbr": ["bsee"] },
-  "education": { "name": ["elementary", "education"], "abbr": ["bsed"] },
+  "education": { "name": ["education"], "abbr": [] },
   "hotel and restaurant management": { "name": ["hotel", "and", "restaurant", "management"], "abbr": ["bshrm", "hrm"] },
   "industrial engineering": { "name": ["industrial", "engineering"], "abbr": ["bsie"] },
   "interior design": { "name": ["interior", "design"], "abbr": ["bsid"] },

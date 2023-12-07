@@ -122,11 +122,11 @@ class TestDegreePreprocessing(unittest.TestCase):
 
 class TestExperiencePreprocessing(unittest.TestCase):
     def test_experience(self):
-        result = pre.prepare_experience(["Worked in a fast food restaurant."], "human resource")
+        result = pre.prepare_experience(["Worked in a fast food restaurant."], "hr & admin")
         assert type(result) == float, type(result)
-        result = pre.prepare_experience(["Worked in a fast food restaurant.", "Worked in another fast food restaurant."], "human resource")
+        result = pre.prepare_experience(["Worked in a fast food restaurant.", "Worked in another fast food restaurant."], "hr & admin")
         assert type(result) == float, type(result)
-        result = pre.prepare_experience(["What"], "human resource")
+        result = pre.prepare_experience(["What"], "hr & admin")
         assert type(result) == float, type(result)
     
     def test_not_experience(self):
@@ -143,11 +143,11 @@ class TestExperiencePreprocessing(unittest.TestCase):
 
 class TestHardSkillsPreprocessing(unittest.TestCase):
     def test_hard_skills(self):
-        result = pre.prepare_hard_skills(["Skilled in communication"], "human resource")
+        result = pre.prepare_hard_skills(["Skilled in communication"], "hr & admin")
         assert type(result) == float, type(result)
-        result = pre.prepare_hard_skills(["People skills", "Backstabbing"], "human resource")
+        result = pre.prepare_hard_skills(["People skills", "Backstabbing"], "hr & admin")
         assert type(result) == float, type(result)
-        result = pre.prepare_hard_skills(["hehe"], "human resource")
+        result = pre.prepare_hard_skills(["hehe"], "hr & admin")
         assert type(result) == float, type(result)
     
     def test_not_hard_skills(self):
@@ -164,11 +164,11 @@ class TestHardSkillsPreprocessing(unittest.TestCase):
 
 class TestSoftSkillsPreprocessing(unittest.TestCase):
     def test_soft_skills(self):
-        result = pre.prepare_soft_skills(["Creative visionary"], "human resource")
+        result = pre.prepare_soft_skills(["Creative visionary"], "hr & admin")
         assert type(result) == float, type(result)
-        result = pre.prepare_soft_skills(["Good attitude", "Remarkability"], "human resource")
+        result = pre.prepare_soft_skills(["Good attitude", "Remarkability"], "hr & admin")
         assert type(result) == float, type(result)
-        result = pre.prepare_soft_skills(["hehe"], "human resource")
+        result = pre.prepare_soft_skills(["hehe"], "hr & admin")
         assert type(result) == float, type(result)
     
     def test_not_soft_skills(self):
@@ -205,6 +205,7 @@ class TestAllPreprocessing(unittest.TestCase):
     def test_prepare(self):
         pre.prepare_features({
             "age": ["12"],
+            "sex": "m",
             "experience": ["Great at doing things."],
             "experience_years": ["2020-2022"],
             "experience_role": ["Developer"],
@@ -215,6 +216,10 @@ class TestAllPreprocessing(unittest.TestCase):
             "degree": [""]
         })
 
+        assert os.path.exists("preprocessed_result")
+
+    def test_csv(self):
+        pre.prepare_features('test.csv')
         assert os.path.exists("preprocessed_result")
 
 

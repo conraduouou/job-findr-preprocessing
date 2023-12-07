@@ -221,7 +221,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
     it is assumed to be a path to the csv containing data of a resume per row.
     
     The dictionary to be inputted here as an argument must have the following features as
-    string keys, with list values:
+    string keys, with list values (except for sex):
 
     1. age
     2. sex
@@ -250,6 +250,10 @@ def prepare_features(features: dict | str, is_common: bool=False):
     if type(features) == str:
         df = pd.read_csv(features)
         output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
+
+        # str conversion of features as well as data format preparation
+        output = [ { key: ([str(value)] if key != "sex" else value) for key, value in resume_data.items() } for resume_data in output ]
+
         prepared = {}
         for data in output:
             processed = __get_prepared(data, is_common)
@@ -259,7 +263,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
                 for key, value in processed.items():
                     prepared[key].extend(value)
     else:
-        prepared = __get_prepared(data, is_common)
+        prepared = __get_prepared(features, is_common)
 
     to_csv = [
         list(prepared.keys()),
