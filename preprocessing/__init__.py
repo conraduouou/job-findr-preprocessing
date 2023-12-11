@@ -255,6 +255,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
         output = [ { key: ([str(value)] if key != "sex" else value) for key, value in resume_data.items() } for resume_data in output ]
 
         prepared = {}
+        count = 1
         for data in output:
             processed = __get_prepared(data, is_common)
             if not prepared:
@@ -262,6 +263,9 @@ def prepare_features(features: dict | str, is_common: bool=False):
             else:
                 for key, value in processed.items():
                     prepared[key].extend(value)
+            
+            spaces_no = 3 - len(str(count)) + 1
+            print(f"Finished processing data count #{str(count).rjust(spaces_no)}")
     else:
         prepared = __get_prepared(features, is_common)
 
