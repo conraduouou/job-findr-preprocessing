@@ -178,16 +178,19 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     return max_score
 
 
-def __get_prepared(data: dict, is_common=False) -> dict:
-    job_field = __get_field(
-        data["experience"]
-        + data["experience_role"]
-        + data["hard_skills"]
-        + data["soft_skills"]
-        + data["degree"]
-        + data["certifications"]
-        + data["training"]
-    )
+def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
+    if field:
+        job_field = field
+    else:
+        job_field = __get_field(
+            data["experience"]
+            + data["experience_role"]
+            + data["hard_skills"]
+            + data["soft_skills"]
+            + data["degree"]
+            + data["certifications"]
+            + data["training"]
+        )
 
     prepared = {
         "age": [prepare_age(data["age"])],
@@ -214,7 +217,7 @@ def __get_prepared(data: dict, is_common=False) -> dict:
     return prepared
 
 
-def prepare_features(features: dict | str, is_common: bool=False):
+def prepare_features(features: dict | str, is_common: bool=False, field: str | None=None):
     """
     A utility function that runs the individual preprocessing functions and generates
     a csv file containing the values.
@@ -249,6 +252,9 @@ def prepare_features(features: dict | str, is_common: bool=False):
     closest to being professional as best as you can.
     """
 
+    if field not in JOB_FIELDS:
+        raise ValueError(f"Field supplied is not supported. This value should only be {JOB_FIELDS}.")
+
     if type(features) == str:
         df = pd.read_csv(features)
         output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
@@ -259,7 +265,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
         prepared = {}
         count = 1
         for data in output:
-            processed = __get_prepared(data, is_common)
+            processed = __get_prepared(data, is_common, field)
             if not prepared:
                 prepared = processed
             else:
@@ -269,7 +275,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
             print(f"Finished processing data count #{str(count).rjust(4)}")
             count += 1
     else:
-        prepared = __get_prepared(features, is_common)
+        prepared = __get_prepared(features, is_common, field)
 
     to_csv = [
         list(prepared.keys()),
