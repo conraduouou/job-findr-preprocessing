@@ -89,12 +89,14 @@ def __force_parse_int(value: str) -> int:
     """
     while type(value) == str:
         if len(value) == 0:
-            value = -1
+            return -1
         try:
             value = int(value)
         except ValueError:
             value = value.strip(string.punctuation + string.whitespace + string.ascii_letters)
-    return value
+            if "." in value:
+                value = value.split(".")[0]
+    return abs(value)
 
 def __get_field(resume_data: list[str]) -> str:
     embeddings = __get_embeddings(resume_data, JOB_FIELDS)
@@ -266,6 +268,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
             
             spaces_no = 3 - len(str(count)) + 1
             print(f"Finished processing data count #{str(count).rjust(spaces_no)}")
+            count += 1
     else:
         prepared = __get_prepared(features, is_common)
 
@@ -306,16 +309,9 @@ def prepare_age(age_strs: list[str] | None) -> int | None:
         return None
 
     for age_str in age_strs:
-        # remove special characters from both ends
-        # handy, since this also removes a dash (minus, hyphen) character, so as to
-        # prevent negative numbers from being output
-        age = age_str.strip(string.punctuation)
-        
-        try:
-            age = int(age)
-        except ValueError:
+        age = __force_parse_int(age_str)
+        if age == -1:
             return None
-        
         return age
 
 
