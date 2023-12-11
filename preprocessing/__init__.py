@@ -266,8 +266,7 @@ def prepare_features(features: dict | str, is_common: bool=False):
                 for key, value in processed.items():
                     prepared[key].extend(value)
             
-            spaces_no = 3 - len(str(count)) + 1
-            print(f"Finished processing data count #{str(count).rjust(spaces_no)}")
+            print(f"Finished processing data count #{str(count).rjust(4)}")
             count += 1
     else:
         prepared = __get_prepared(features, is_common)
