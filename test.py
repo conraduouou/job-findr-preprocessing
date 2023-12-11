@@ -40,6 +40,8 @@ class TestCertificationsPreprocessing(unittest.TestCase):
         assert result == "TRUE"
         result = pre.prepare_certifications([])
         assert result == "FALSE"
+        result = pre.prepare_certifications([""])
+        assert result == "FALSE"
 
 
 class TestTrainingPreprocessing(unittest.TestCase):
@@ -47,6 +49,8 @@ class TestTrainingPreprocessing(unittest.TestCase):
         result = pre.prepare_training(["dummy value"])
         assert result == "TRUE"
         result = pre.prepare_training([])
+        assert result == "FALSE"
+        result = pre.prepare_training([""])
         assert result == "FALSE"
 
 

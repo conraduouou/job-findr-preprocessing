@@ -320,7 +320,9 @@ def prepare_certifications(cert_array: list[str] | None) -> str:
 
     If there is at least one (1) certification found, then return TRUE (string).
     """
-    return str(cert_array != None and len(cert_array) > 0).upper()
+    if cert_array == None:
+        return "FALSE"
+    return str(len(cert_array) > 0 and len(cert_array[0]) > 0).upper()
 
 
 def prepare_training(training_array: list[str] | None) -> str:
@@ -329,7 +331,9 @@ def prepare_training(training_array: list[str] | None) -> str:
 
     If there is at least one (1) training data found, then return TRUE (string).
     """
-    return str(training_array != None and len(training_array) > 0).upper()
+    if training_array == None:
+        return "FALSE"
+    return str(len(training_array) > 0 and len(training_array[0]) > 0).upper()
 
 
 def prepare_experience_years(years_array: list[str]) -> int | None:
