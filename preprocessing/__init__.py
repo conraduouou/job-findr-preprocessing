@@ -322,6 +322,8 @@ def prepare_certifications(cert_array: list[str] | None) -> str:
     """
     if cert_array == None:
         return "FALSE"
+    elif len(cert_array) == 1 and "nan" in cert_array:
+        return "FALSE"
     return str(len(cert_array) > 0 and len(cert_array[0]) > 0).upper()
 
 
@@ -332,6 +334,8 @@ def prepare_training(training_array: list[str] | None) -> str:
     If there is at least one (1) training data found, then return TRUE (string).
     """
     if training_array == None:
+        return "FALSE"
+    elif len(training_array) == 1 and "nan" in training_array:
         return "FALSE"
     return str(len(training_array) > 0 and len(training_array[0]) > 0).upper()
 
