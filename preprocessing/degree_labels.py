@@ -12,6 +12,7 @@ DEGREE_LABELS = {
   "civil engineering": { "name": ["civil", "engineering"], "abbr": ["bsce"] },
   "computer engineering": { "name": ["computer", "engineering"], "abbr": ["bscpe"] },
   "computer science": { "name": ["computer", "science"], "abbr": ["bscs"] },
+  "information technology": { "name": ["information", "technology"], "abbr": ["bsit", "it"] },
   "economics": { "name": ["economics"], "abbr": [] },
   "electrical engineering": { "name": ["electrical", "engineering"], "abbr": ["bsee"] },
   "education": { "name": ["education"], "abbr": [] },
