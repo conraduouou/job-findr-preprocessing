@@ -19,6 +19,105 @@ JOB_FIELDS = [
     __SERVICES
 ]
 
+JOB_FIELDS_BASELINES = {
+    __ACCOUNTING: [
+        'Financial statements',
+        'Auditing',
+        'Taxation',
+        'Budgeting',
+        'Forensic accounting',
+        'Cost accounting',
+        'GAAP (Generally Accepted Accounting Principles)',
+        'Internal controls',
+        'Bookkeeping',
+        'Financial analysis'
+    ],
+    __HUMAN_RESOURCE: [
+        'Talent acquisition',
+        'Employee relations',
+        'Performance management',
+        'Compensation and benefits',
+        'HR policies',
+        'Diversity and inclusion',
+        'Training and development',
+        'Employee engagement',
+        'HRIS (Human Resources Information System)',
+        'Workplace culture'
+    ],
+    __ARTS_MEDIA: [
+        'Visual arts',
+        'Performing arts',
+        'Fine arts',
+        'Contemporary art',
+        'Sculpture',
+        'Digital art',
+        'Art history',
+        'Art exhibitions',
+        'Creative expression',
+        'Artistic techniques'
+    ],
+    __EDUCATION: [
+        'Pedagogy',
+        'Curriculum development',
+        'Classroom management',
+        'Educational technology',
+        'Student assessment',
+        'Special education',
+        'Lifelong learning',
+        'E-learning',
+        'Educational psychology',
+        'Teacher training'
+    ],
+    __TECHNOLOGY: [
+        'Programming languages',
+        'Cybersecurity',
+        'Data science',
+        'Artificial intelligence',
+        'Cloud computing',
+        'Web development',
+        'Network administration',
+        'IT infrastructure',
+        'Software engineering',
+        'User experience (UX) design'
+    ],
+    __ENGINEERING: [
+        'Civil engineering',
+        'Mechanical engineering',
+        'Electrical engineering',
+        'Aerospace engineering',
+        'Chemical engineering',
+        'Structural engineering',
+        'Environmental engineering',
+        'Robotics',
+        'Systems engineering',
+        'Industrial engineering'
+    ],
+    __HEALTH: [
+        'Medicine',
+        'Nursing',
+        'Public health',
+        'Healthcare administration',
+        'Patient care',
+        'Medical research',
+        'Health informatics',
+        'Epidemiology',
+        'Telemedicine',
+        'Pharmaceutical industry'
+    ],
+    __SERVICES: [
+        'Customer service',
+        'Hospitality',
+        'Consulting',
+        'Event planning',
+        'Marketing services',
+        'Financial services',
+        'Legal services',
+        'Real estate services',
+        'Information services',
+        'Social services'
+    ]
+}
+
 ROLE_BASELINES = [
     "Senior",
     "Advanced",
@@ -27,6 +126,8 @@ ROLE_BASELINES = [
     "Professional",
     "Master"
 ]
+
+
 
 HARD_SKILLS_BASELINES = {
     __ACCOUNTING: [

@@ -100,7 +100,7 @@ def __force_parse_int(value: str) -> int:
 
 def __get_field(resume_data: list[str]) -> str:
     # get tuples of hard skills 
-    tuples = list(HARD_SKILLS_BASELINES.items())
+    tuples = list(JOB_FIELDS_BASELINES.items())
     baseline_statements = [ value for _, value in tuples ]
 
     resume_embeddings = __get_embeddings(resume_data)[0]
