@@ -252,7 +252,7 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
     closest to being professional as best as you can.
     """
 
-    if field not in JOB_FIELDS:
+    if field != None and field not in JOB_FIELDS:
         raise ValueError(f"Field supplied is not supported. This value should only be {JOB_FIELDS}.")
 
     if type(features) == str:
