@@ -99,25 +99,29 @@ def __force_parse_int(value: str) -> int:
     return abs(value)
 
 def __get_field(resume_data: list[str]) -> str:
-    embeddings = __get_embeddings(resume_data, JOB_FIELDS)
-    data = embeddings[0]
-    fields = embeddings[1]
+    # get tuples of hard skills 
+    tuples = list(HARD_SKILLS_BASELINES.items())
+    baseline_statements = [ value for _, value in tuples ]
+
+    resume_embeddings = __get_embeddings(resume_data)[0]
+    statement_embeddings = __get_embeddings(*baseline_statements)
 
     max_score = -2
     max_index = 0
-    for field_index in range(len(fields)):
-        field = fields[field_index]
-        field_mean = np.reshape(np.mean(field, axis=0), (1, -1))
-        for item in data:
-            item_mean = np.reshape(np.mean(item, axis=0), (1, -1))
-            similarity = cosine_similarity(field_mean, item_mean)
-            similarity = float(similarity.squeeze())
+    for baseline_index in range(len(statement_embeddings)):
+        statements = statement_embeddings[baseline_index]
+        for statement in statements:
+            baseline_mean = np.reshape(np.mean(statement, axis=0), (1, -1))
+            for item in resume_embeddings:
+                item_mean = np.reshape(np.mean(item, axis=0), (1, -1))
+                similarity = cosine_similarity(baseline_mean, item_mean)
+                similarity = float(similarity.squeeze())
 
-            if similarity > max_score:
-                max_score = similarity
-                max_index = field_index
+                if similarity > max_score:
+                    max_score = similarity
+                    max_index = baseline_index
 
-    return JOB_FIELDS[max_index]
+    return tuples[max_index][0]
 
 def __get_embeddings(*args: list[str]) -> list[np.ndarray]:
     graph = tf.Graph()
