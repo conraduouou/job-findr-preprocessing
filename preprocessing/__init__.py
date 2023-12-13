@@ -186,7 +186,6 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
             data["experience"]
             + data["experience_role"]
             + data["hard_skills"]
-            + data["soft_skills"]
             + data["degree"]
             + data["certifications"]
             + data["training"]
