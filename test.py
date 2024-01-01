@@ -1,6 +1,7 @@
 import os
 import unittest
 import preprocessing as pre
+from datetime import datetime
 
 class TestAgePreprocessing(unittest.TestCase):
     def test_age(self):
@@ -8,6 +9,10 @@ class TestAgePreprocessing(unittest.TestCase):
         assert type(result) == int
         result = pre.prepare_age(["0"])
         assert type(result) == int
+        result = pre.prepare_age(["12.6"])
+        assert result == 12
+        result = pre.prepare_age(["12.6", "something", "13"])
+        assert result == 12
     
     def test_negative(self):
         result = pre.prepare_age(["-1"])
@@ -65,7 +70,7 @@ class TestExperienceYearsPreprocessing(unittest.TestCase):
         result = pre.prepare_experience_years(["2023-2025", "2018 to 2023", "2017 - 2018"])
         assert result == 8
         result = pre.prepare_experience_years(["2019-current"])
-        assert result == 4
+        assert result == datetime.now().year - 2019
 
     def test_not(self):
         result = pre.prepare_experience_years(["-- !! )"])

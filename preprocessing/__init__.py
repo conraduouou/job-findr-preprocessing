@@ -91,11 +91,9 @@ def __force_parse_int(value: str) -> int:
         if len(value) == 0:
             return -1
         try:
-            value = int(value)
+            value = int(float(value))
         except ValueError:
             value = value.strip(string.punctuation + string.whitespace + string.ascii_letters)
-            if "." in value:
-                value = value.split(".")[0]
     return abs(value)
 
 def __get_field(resume_data: list[str]) -> str:
