@@ -333,7 +333,12 @@ def prepare_certifications(cert_array: list[str] | None) -> str:
         return "FALSE"
     elif len(cert_array) == 1 and "nan" in cert_array:
         return "FALSE"
-    return str(len(cert_array) > 0 and len(cert_array[0]) > 0).upper()
+    
+    for cert_str in cert_array:
+        if len(cert_str) > 0:
+            return "TRUE"
+
+    return "FALSE"
 
 
 def prepare_training(training_array: list[str] | None) -> str:
@@ -346,7 +351,12 @@ def prepare_training(training_array: list[str] | None) -> str:
         return "FALSE"
     elif len(training_array) == 1 and "nan" in training_array:
         return "FALSE"
-    return str(len(training_array) > 0 and len(training_array[0]) > 0).upper()
+    
+    for training_str in training_array:
+        if len(training_str) > 0:
+            return "TRUE"
+
+    return "FALSE"
 
 
 def prepare_experience_years(years_array: list[str]) -> int | None:
@@ -449,11 +459,18 @@ def prepare_experience(experience_array: list[str] | None, field: str) -> float 
     if not experience_array or len(experience_array) == 0 or field not in JOB_FIELDS:
         return None
     
+    list = []
+
     # clean data
     for experience in experience_array:
         experience = experience.strip(string.punctuation + string.whitespace)
+        if len(experience) > 0:
+            list.append(experience)
 
-    return __get_max_similarity(EXPERIENCE_BASELINES[field], experience_array)
+    if len(list) == 0:
+        return None
+
+    return __get_max_similarity(EXPERIENCE_BASELINES[field], list)
 
 
 def prepare_hard_skills(hard_array: list[str] | None, field: str) -> float | None:
@@ -469,8 +486,19 @@ def prepare_hard_skills(hard_array: list[str] | None, field: str) -> float | Non
     # Return nil if array does not contain anything or if it's None
     if not hard_array or len(hard_array) == 0 or field not in JOB_FIELDS:
         return None
+    
+    list = []
 
-    return __get_max_similarity(HARD_SKILLS_BASELINES[field], hard_array)
+    # clean data
+    for skill in hard_array:
+        skill = skill.strip(string.punctuation + string.whitespace)
+        if len(skill) > 0:
+            list.append(skill)
+
+    if len(list) == 0:
+        return None
+
+    return __get_max_similarity(HARD_SKILLS_BASELINES[field], list)
 
 
 def prepare_soft_skills(soft_array: list[str] | None, field: str) -> float | None:
@@ -486,8 +514,19 @@ def prepare_soft_skills(soft_array: list[str] | None, field: str) -> float | Non
     # Return nil if array does not contain anything or if it's None
     if not soft_array or len(soft_array) == 0 or field not in JOB_FIELDS:
         return None
+    
+    list = []
 
-    return __get_max_similarity(SOFT_SKILLS_BASELINES[field], soft_array)
+    # clean data
+    for skill in soft_array:
+        skill = skill.strip(string.punctuation + string.whitespace)
+        if len(skill) > 0:
+            list.append(skill)
+
+    if len(list) == 0:
+        return None
+
+    return __get_max_similarity(SOFT_SKILLS_BASELINES[field], list)
 
 
 def prepare_experience_role(role_array: list[str] | None) -> float | None:
@@ -503,8 +542,19 @@ def prepare_experience_role(role_array: list[str] | None) -> float | None:
     # Return nil if array does not contain anything or if it's None
     if not role_array or len(role_array) == 0:
         return None
+    
+    list = []
 
-    return __get_max_similarity(ROLE_BASELINES, role_array)
+    # clean data
+    for role in role_array:
+        role = role.strip(string.punctuation + string.whitespace)
+        if len(role) > 0:
+            list.append(role)
+
+    if len(list) == 0:
+        return None
+
+    return __get_max_similarity(ROLE_BASELINES, list)
 
     
 def prepare_degree(degree_strs: list[str] | None) -> str | None:
