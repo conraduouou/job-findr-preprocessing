@@ -266,8 +266,6 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
         output = [ { key: ([str(value)] if key != "sex" else value) for key, value in resume_data.items() } for resume_data in output ]
         output = [ { key: (None if value[0] == "nan" and key != "sex" else value) for key, value in entry.items() } for entry in output ]
 
-        print(output)
-
         prepared = {}
         count = 1
         for data in output:
