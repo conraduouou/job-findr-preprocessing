@@ -184,14 +184,14 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
     if field:
         job_field = field
     else:
-        job_field = __get_field(
-            data["experience"]
-            + data["experience_role"]
-            + data["hard_skills"]
-            + data["degree"]
-            + data["certifications"]
-            + data["training"]
-        )
+        features_needed = ["experience", "experience_role", "hard_skills", "degree", "certifications", "training"]
+
+        string_features = []
+        for feature in features_needed:
+            if data[feature] is not None:
+                string_features.extend(data[feature])
+
+        job_field = __get_field(string_features)
 
     prepared = {
         "age": [prepare_age(data["age"])],
@@ -264,6 +264,9 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
 
         # str conversion of features as well as data format preparation
         output = [ { key: ([str(value)] if key != "sex" else value) for key, value in resume_data.items() } for resume_data in output ]
+        output = [ { key: (None if value[0] == "nan" and key != "sex" else value) for key, value in entry.items() } for entry in output ]
+
+        print(output)
 
         prepared = {}
         count = 1

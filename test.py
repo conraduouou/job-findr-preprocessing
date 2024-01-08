@@ -182,7 +182,12 @@ class TestSoftSkillsPreprocessing(unittest.TestCase):
     
     def test_not_soft_skills(self):
         # No array
-        result = pre.prepare_soft_skills(None, "accounting")
+        result = pre.prepare_soft_skills(None, "accounting & finance")
+        assert result == None
+        # Invalid field with valid soft skills array (must be "accounting & finance")
+        result = pre.prepare_soft_skills(["Something", "Something"], "accounting")
+        assert result == None
+        result = pre.prepare_soft_skills(["Something", "Something"], "Something")
         assert result == None
         # Invalid field
         result = pre.prepare_soft_skills(None, "what are you doing")
