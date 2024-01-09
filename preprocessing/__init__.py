@@ -321,6 +321,8 @@ def prepare_age(age_strs: list[str] | None) -> int | None:
         age = __force_parse_int(age_str)
         if age == -1:
             return None
+        elif age < 15 and age > 90:
+            continue
         return age
 
 
