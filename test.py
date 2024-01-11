@@ -199,19 +199,23 @@ class TestSoftSkillsPreprocessing(unittest.TestCase):
 
 class TestRolePreprocessing(unittest.TestCase):
     def test_soft_skills(self):
-        result = pre.prepare_experience_role(["Programmer"])
-        assert type(result) == float, type(result)
-        result = pre.prepare_experience_role(["Developer", "Database Administrator"])
-        assert type(result) == float, type(result)
-        result = pre.prepare_experience_role(["hehe"])
-        assert type(result) == float, type(result)
+        result = pre.prepare_experience_role(["illustrator"])
+        assert result == "illustrator"
+        result = pre.prepare_experience_role(["bookkeeper", "financial advisor"])
+        assert result == "bookkeeper"
+        result = pre.prepare_experience_role(["financial advisor something"])
+        assert result == "financial advisor"
+        result = pre.prepare_experience_role(["something financial advisor"])
+        assert result == "financial advisor"
+        result = pre.prepare_experience_role(["{{[=financial advisor-- // |"])
+        assert result == "financial advisor", result
     
     def test_not_soft_skills(self):
-        # No array
-        result = pre.prepare_experience_role(None)
+        result = pre.prepare_experience_role(["illustrators"])
         assert result == None
-        # Empty array
-        result = pre.prepare_experience_role([])
+        result = pre.prepare_experience_role(["computer engineer"])
+        assert result == None
+        result = pre.prepare_experience_role(["financial something advisor"])
         assert result == None
 
 

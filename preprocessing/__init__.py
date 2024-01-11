@@ -10,6 +10,7 @@ from datetime import datetime
 from sklearn.metrics.pairwise import cosine_similarity
 
 from .degree_labels import DEGREE_LABELS
+from .experience_roles import EXPERIENCE_ROLES
 from .baselines import *
 
 # ELMo doesn't support eager execution
@@ -532,32 +533,45 @@ def prepare_soft_skills(soft_array: list[str] | None, field: str) -> float | Non
     return __get_max_similarity(SOFT_SKILLS_BASELINES[field], list)
 
 
-def prepare_experience_role(role_array: list[str] | None) -> float | None:
+def prepare_experience_role(role_array: list[str] | None) -> str | None:
     """
-    Expects a list of roles that contains the applicant's past roles.
+    Expects a string that contains information regarding the applicant's past roles.
 
-    This function makes use of the ELMo model to compare baseline statements, ultimately
-    determining **professional** an applicant's resume seems.
+    This should return a value within the scope of the EXPERIENCE_ROLES constant dict.
 
-    This might be a flaw in the system, since it does not determine how close a hard skill
-    is to a specific role. This is a future recommendation for researchers.
+    *NOTE*: This returns THE FIRST VALID DEGREE FOUND from the list. Once found, all subsequent
+    values in the list are disregarded.
     """
+
     # Return nil if array does not contain anything or if it's None
     if not role_array or len(role_array) == 0:
         return None
     
-    list = []
-
-    # clean data
     for role in role_array:
-        role = role.strip(string.punctuation + string.whitespace)
-        if len(role) > 0:
-            list.append(role)
+        while True:
+            temp_role = role.strip(string.punctuation + string.digits + string.whitespace).lower()
+            if role != temp_role:
+                role = temp_role
+            else:
+                break
+            
+        words = role.strip(string.punctuation + string.digits).lower().split()
+        word_count = len(words)
 
-    if len(list) == 0:
-        return None
+        for index in range(word_count):
+            for label, options in EXPERIENCE_ROLES.items():
+                name_tokens = options["name"]
 
-    return __get_max_similarity(ROLE_BASELINES, list)
+                # check if there's a match in the created LABELS constant
+                if len(name_tokens) <= word_count - index:
+                    is_match = True
+                    for j in range(len(name_tokens)):
+                        if name_tokens[j] != words[index + j]:
+                            is_match = False
+                            break
+                    
+                    if is_match:
+                        return label
 
     
 def prepare_degree(degree_strs: list[str] | None) -> str | None:
@@ -575,6 +589,13 @@ def prepare_degree(degree_strs: list[str] | None) -> str | None:
         return None
     
     for degree_str in degree_strs:
+        while True:
+            temp_str = degree_str.strip(string.punctuation + string.digits + string.whitespace).lower()
+            if degree_str != temp_str:
+                degree_str = temp_str
+            else:
+                break
+        
         words = degree_str.strip(string.punctuation + string.digits).lower().split()
         word_count = len(words)
 
