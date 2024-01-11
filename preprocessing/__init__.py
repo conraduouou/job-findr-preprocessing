@@ -264,12 +264,22 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
         output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
 
         # str conversion of features as well as data format preparation
-        output = [ { key: ([str(value)] if key != "sex" else value) for key, value in resume_data.items() } for resume_data in output ]
-        output = [ { key: (None if value[0] == "nan" and key != "sex" else value) for key, value in entry.items() } for entry in output ]
+        clean_output = []
+        for resume_data in output:
+            entry = {}
+            for key, value in resume_data.items():
+                if pd.isna(value):
+                    final_value = None
+                elif key == "sex":
+                    final_value = value
+                else:
+                    final_value = [str(value)]
+                entry[key] = final_value
+            clean_output.append(entry)
 
         prepared = {}
         count = 1
-        for data in output:
+        for data in clean_output:
             processed = __get_prepared(data, is_common, field)
             if not prepared:
                 prepared = processed
