@@ -191,6 +191,7 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
         for feature in features_needed:
             if data[feature] is not None:
                 string_features.extend(data[feature])
+                break
 
         job_field = __get_field(string_features)
 
