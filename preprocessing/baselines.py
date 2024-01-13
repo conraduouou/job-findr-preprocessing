@@ -21,100 +21,100 @@ JOB_FIELDS = [
 
 JOB_FIELDS_BASELINES = {
     __ACCOUNTING: [
-        'Financial statements',
-        'Auditing',
-        'Taxation',
-        'Budgeting',
-        'Forensic accounting',
-        'Cost accounting',
-        'GAAP (Generally Accepted Accounting Principles)',
-        'Internal controls',
-        'Bookkeeping',
-        'Financial analysis'
+        'Financial accounting and auditing',
+        'Investment analysis and portfolio management',
+        'Tax planning and regulatory compliance',
+        'Corporate finance and treasury management',
+        'Budgeting and cost control strategies',
+        'Risk assessment and financial modeling',
+        'Management accounting and performance analysis',
+        'Financial reporting and regulatory compliance',
+        'Treasury operations and cash flow management',
+        'Strategic financial planning and advisory'
     ],
     __HUMAN_RESOURCE: [
-        'Talent acquisition',
-        'Employee relations',
-        'Performance management',
-        'Compensation and benefits',
-        'HR policies',
-        'Diversity and inclusion',
-        'Training and development',
-        'Employee engagement',
-        'HRIS (Human Resources Information System)',
-        'Workplace culture'
+        'Workforce planning and employee relations',
+        'Talent acquisition and recruitment strategies',
+        'Employee training and professional growth',
+        'Employee benefits and compensation management',
+        'Performance appraisal and career advancement',
+        'HR policy formulation and compliance',
+        'Office operations and workplace management',
+        'Corporate communication and internal affairs',
+        'Conflict resolution and employee mediation',
+        'Strategic planning for organizational growth'
     ],
     __ARTS_MEDIA: [
-        'Visual arts',
-        'Performing arts',
-        'Fine arts',
-        'Contemporary art',
-        'Sculpture',
-        'Digital art',
-        'Art history',
-        'Art exhibitions',
-        'Creative expression',
-        'Artistic techniques'
+        'Visual arts and graphic design',
+        'Media production and broadcast journalism',
+        'Performing arts and stage production',
+        'Digital media and interactive storytelling',
+        'Cinematography and film editing',
+        'Music composition and sound design',
+        'Fine arts curation and exhibition',
+        'Creative writing and literary expression',
+        'Digital marketing for arts and cultural events',
+        'Art education and cultural outreach programs'
     ],
     __EDUCATION: [
-        'Pedagogy',
-        'Curriculum development',
-        'Classroom management',
-        'Educational technology',
-        'Student assessment',
-        'Special education',
-        'Lifelong learning',
-        'E-learning',
-        'Educational psychology',
-        'Teacher training'
+        'Curriculum design and instructional development',
+        'Educational technology integration',
+        'Student assessment and performance analysis',
+        'Learning resources and digital content creation',
+        'Classroom management and student engagement',
+        'School administration and educational leadership',
+        'Specialized training programs and workshops',
+        'Educational research and program evaluation',
+        'Child development and early childhood education',
+        'Inclusive education and diverse learning environments'
     ],
     __TECHNOLOGY: [
-        'Programming languages',
-        'Cybersecurity',
-        'Data science',
-        'Artificial intelligence',
-        'Cloud computing',
-        'Web development',
-        'Network administration',
-        'IT infrastructure',
-        'Software engineering',
-        'User experience (UX) design'
+        'Software development and programming',
+        'Network infrastructure and cybersecurity',
+        'Electronic systems design and integration',
+        'Data analytics and business intelligence',
+        'Biometric and identification technology',
+        'Cloud computing and virtualization solutions',
+        'Artificial intelligence and machine learning applications',
+        'Blockchain and decentralized systems',
+        'Human-computer interaction and user experience design',
+        'Internet of Things (IoT) applications and connectivity'
     ],
     __ENGINEERING: [
-        'Civil engineering',
-        'Mechanical engineering',
-        'Electrical engineering',
-        'Aerospace engineering',
-        'Chemical engineering',
-        'Structural engineering',
-        'Environmental engineering',
-        'Robotics',
-        'Systems engineering',
-        'Industrial engineering'
+        'Infrastructure development and urban planning',
+        'Structural design and construction management',
+        'Transportation system engineering',
+        'Water resources and environmental projects',
+        'Geotechnical and soil mechanics analysis',
+        'Construction materials and quality control',
+        'Surveying and land development',
+        'Project management for built environments',
+        'Traffic flow and urban mobility solutions',
+        'Sustainable and resilient infrastructure'
     ],
     __HEALTH: [
-        'Medicine',
-        'Nursing',
-        'Public health',
-        'Healthcare administration',
-        'Patient care',
-        'Medical research',
-        'Health informatics',
-        'Epidemiology',
-        'Telemedicine',
-        'Pharmaceutical industry'
+        'Primary care and family medicine clinics',
+        'Hospital administration and clinical management',
+        'Healthcare strategy consulting and advisory',
+        'Medical conference and event planning',
+        'Healthcare marketing and patient engagement',
+        'Financial management for medical institutions',
+        'Legal compliance and regulations in healthcare',
+        'Real estate for healthcare facilities and clinics',
+        'Health information technology and data management in medical settings',
+        'Social services for healthcare and patient support'
     ],
     __SERVICES: [
-        'Customer service',
-        'Hospitality',
-        'Consulting',
-        'Event planning',
-        'Marketing services',
-        'Financial services',
-        'Legal services',
-        'Real estate services',
-        'Information services',
-        'Social services'
+        'Customer support and helpline assistance',
+        'Hotel and hospitality management',
+        'Business consulting and advisory',
+        'Event planning and coordination',
+        'Marketing strategy and promotion',
+        'Financial planning and consulting',
+        'Legal advisory and representation',
+        'Real estate consulting and property management',
+        'Information technology and data management',
+        'Social welfare and community support'
     ]
 }
 
@@ -126,7 +126,6 @@ ROLE_BASELINES = [
     "Professional",
     "Master"
 ]
-
 
 
 HARD_SKILLS_BASELINES = {
