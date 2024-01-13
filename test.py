@@ -41,21 +41,17 @@ class TestAgePreprocessing(unittest.TestCase):
 
 class TestCertificationsPreprocessing(unittest.TestCase):
     def test_certifications(self):
-        result = pre.prepare_certifications(["dummy value"])
-        assert result == "TRUE"
-        result = pre.prepare_certifications([])
+        result = pre.prepare_certifications([], "engineering")
         assert result == "FALSE"
-        result = pre.prepare_certifications([""])
+        result = pre.prepare_certifications([""], "engineering")
         assert result == "FALSE"
 
 
 class TestTrainingPreprocessing(unittest.TestCase):
     def test_training(self):
-        result = pre.prepare_training(["dummy value"])
-        assert result == "TRUE"
-        result = pre.prepare_training([])
+        result = pre.prepare_training([], "engineering")
         assert result == "FALSE"
-        result = pre.prepare_training([""])
+        result = pre.prepare_training([""], "engineering")
         assert result == "FALSE"
 
 

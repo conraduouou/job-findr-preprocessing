@@ -206,9 +206,9 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
         "experience_years": [prepare_experience_years(data["experience_years"])],
         "hard_skills": [prepare_hard_skills(data["hard_skills"], job_field)],
         "soft_skills": [prepare_soft_skills(data["soft_skills"], job_field)],
-        "certifications": [prepare_certifications(data["certifications"])],
+        "certifications": [prepare_certifications(data["certifications"]), job_field],
         "degree": [prepare_degree(data["degree"])],
-        "training": [prepare_training(data["training"])],
+        "training": [prepare_training(data["training"]), job_field],
         "job_field": [job_field],
     }
 
@@ -341,7 +341,7 @@ def prepare_age(age_strs: list[str] | None) -> int | None:
         return age
 
 
-def prepare_certifications(cert_array: list[str] | None) -> str:
+def prepare_certifications(cert_array: list[str] | None, field: str) -> str:
     """
     Expects a list of strings that contains the applicant's certifications.
 
@@ -352,14 +352,23 @@ def prepare_certifications(cert_array: list[str] | None) -> str:
     elif len(cert_array) == 1 and "nan" in cert_array:
         return "FALSE"
     
+    list = []
     for cert_str in cert_array:
-        if len(cert_str) > 0:
-            return "TRUE"
+        cert = cert_str.strip(string.punctuation + string.whitespace)
+        if len(cert) > 0:
+            list.append(cert)
 
-    return "FALSE"
+    if len(list) == 0:
+        return "FALSE"
+    
+    similarity = __get_max_similarity(JOB_FIELDS_BASELINES[field], list)
+    if similarity < 0.25:
+        return "FALSE"
+    
+    return "TRUE"
 
 
-def prepare_training(training_array: list[str] | None) -> str:
+def prepare_training(training_array: list[str] | None, field: str) -> str:
     """
     Expects a list of strings that contains the applicant's training data.
 
@@ -370,11 +379,20 @@ def prepare_training(training_array: list[str] | None) -> str:
     elif len(training_array) == 1 and "nan" in training_array:
         return "FALSE"
     
+    list = []
     for training_str in training_array:
-        if len(training_str) > 0:
-            return "TRUE"
+        training = training_str.strip(string.punctuation + string.whitespace)
+        if len(training) > 0:
+            list.append(training)
 
-    return "FALSE"
+    if len(list) == 0:
+        return "FALSE"
+    
+    similarity = __get_max_similarity(JOB_FIELDS_BASELINES[field], list)
+    if similarity < 0.25:
+        return "FALSE"
+    
+    return "TRUE"
 
 
 def prepare_experience_years(years_array: list[str]) -> int | None:
