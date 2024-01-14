@@ -83,4 +83,9 @@ DEGREE_LABELS = {
   "genetics": { "name": ["genetics"], "abbr": [] },
   "physiology": { "name": ["physiology"], "abbr": [] },
   "nursing": { "name": ["nursing"], "abbr": [] },
+  "medical technology": { "name": ["medical", "technology"], "abbr": [] },
+  "medicine": { "name": ["medicine"], "abbr": [] },
+  "dentistry": { "name": ["dentistry"], "abbr": [] },
+  "pharmacy": { "name": ["pharmacy"], "abbr": [] },
+  "histology": { "name": ["histology"], "abbr": [] },
 }

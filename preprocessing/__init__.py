@@ -181,9 +181,6 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
     return max_score
 
 
-def get_field(string_features: list[str]) -> str:
-    return __get_field(string_features)
-
 def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
     if field:
         job_field = field
