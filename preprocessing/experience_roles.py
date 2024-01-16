@@ -354,7 +354,6 @@ EXPERIENCE_ROLES = {
 "assistant bookkeeper": { "name": ["assistant", "bookkeeper"] },
 "bookkeeping specialist": { "name": ["bookkeeping", "specialist"] },
 "accounting assistant": { "name": ["accounting", "assistant"] },
-
 "bookkeeping coordinator": { "name": ["bookkeeping", "coordinator"] },
 "junior accounting clerk": { "name": ["junior", "accounting", "clerk"] },
 "entry level bookkeeper": { "name": ["entry", "level", "bookkeeper"] },
@@ -1988,5 +1987,7 @@ EXPERIENCE_ROLES = {
 "office clerk general services": { "name": ["office", "clerk", "general", "services"] },
 "delivery driver warehouse clerk": { "name": ["delivery", "driver", "warehouse", "clerk"] },
 "stock room stockroom clerk": { "name": ["stock", "room", "stockroom", "clerk"] },
-"human resources clerk": { "name": ["human", "resources", "clerk"] }
+"human resources clerk": { "name": ["human", "resources", "clerk"] },
+"hotel and restaurant staff": { "name": ["hotel", "and", "restaurant", "staff"] },
+"event planner": { "name": ["event", "planner"] }
 }
