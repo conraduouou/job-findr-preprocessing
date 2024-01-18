@@ -185,7 +185,7 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
     if field:
         job_field = field
     else:
-        features_needed = ["experience", "experience_role", "hard_skills", "degree", "certifications", "training"]
+        features_needed = ["degree", "experience_role", "hard_skills", "experience", "certifications", "training"]
 
         string_features = []
         for feature in features_needed:
