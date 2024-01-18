@@ -219,11 +219,9 @@ HARD_SKILLS_BASELINES = {
         "Project Management",
         "Data Analysis",
         "Market Research",
-        "Technology Integration",
         "Risk Management",
         "Contract Negotiation",
         "Regulatory Compliance",
-        "Quality Assurance"
     ]
 }
 
