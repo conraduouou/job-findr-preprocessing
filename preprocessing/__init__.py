@@ -203,9 +203,9 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
         "experience_years": [prepare_experience_years(data["experience_years"])],
         "hard_skills": [prepare_hard_skills(data["hard_skills"], job_field)],
         "soft_skills": [prepare_soft_skills(data["soft_skills"], job_field)],
-        "certifications": [prepare_certifications(data["certifications"]), job_field],
+        "certifications": [prepare_certifications(data["certifications"], job_field)],
         "degree": [prepare_degree(data["degree"])],
-        "training": [prepare_training(data["training"]), job_field],
+        "training": [prepare_training(data["training"], job_field)],
         "job_field": [job_field],
     }
 
