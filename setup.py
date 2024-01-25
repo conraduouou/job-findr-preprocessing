@@ -19,7 +19,9 @@ setup(
             "tensorflow",
             "tensorflow_hub",
             "scikit-learn",
-            "pandas"
+            "pandas",
+            "tqdm",
+            "silence-tensorflow"
         ],
         keywords=['preprocessing', 'custom'],
         classifiers= [

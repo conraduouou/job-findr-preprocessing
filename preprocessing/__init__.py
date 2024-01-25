@@ -1,13 +1,11 @@
 import csv
 import numpy as np
 import pandas as pd
+import silence_tensorflow.auto 
 import tensorflow_hub as hub
 import tensorflow as tf
 import os
 import string
-
-import logging
-tf.get_logger().setLevel(logging.ERROR)
 
 from datetime import datetime
 from sklearn.metrics.pairwise import cosine_similarity
