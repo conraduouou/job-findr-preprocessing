@@ -30,7 +30,8 @@ JOB_FIELDS_BASELINES = {
         'Management accounting and performance analysis',
         'Financial reporting and regulatory compliance',
         'Treasury operations and cash flow management',
-        'Strategic financial planning and advisory'
+        'Strategic financial planning and advisory',
+        'CPA CFA'
     ],
     __HUMAN_RESOURCE: [
         'Workforce planning and employee relations',

@@ -1,6 +1,8 @@
 DEGREE_LABELS = {
   "accountancy": { "name": ["accountancy"], "abbr": ["bsa"] },
-  "accounting": { "name": ["accounting"], "abbr": [] },
+  "finance": { "name": ["finance"], "abbr": [] },
+  "entrepreneurship": { "name": ["entrepreneurship"], "abbr": [] },
+  "accounting": { "name": ["accounting"], "abbr": ["vsa"] },
   "anthropology": { "name": ["anthropology"], "abbr": [] },
   "applied physics": { "name": ["applied", "physics"], "abbr": ["bsap"] },
   "architecture": { "name": ["architecture"], "abbr": [] },
