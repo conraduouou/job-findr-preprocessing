@@ -652,7 +652,7 @@ def prepare_degree(degree_strs: list[str] | None) -> str | None:
                         return label
 
 
-def prepare(feature: str, input: any | None) -> any | None:
+def prepare(feature: str, input) -> None:
     """
     Expects first a string for the name of the feature to be preprocessed and then uses
     the second argument as the data to be preprocessed.
