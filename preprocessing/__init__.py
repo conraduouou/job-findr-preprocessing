@@ -98,7 +98,6 @@ def __force_parse_int(value: str) -> int:
     return abs(value)
 
 def __get_field(resume_data: list[str]) -> str:
-    # get tuples of hard skills 
     tuples = list(JOB_FIELDS_BASELINES.items())
     baseline_statements = [ value for _, value in tuples ]
 
@@ -651,3 +650,35 @@ def prepare_degree(degree_strs: list[str] | None) -> str | None:
                 for j in range(len(abbreviations)): 
                     if current_word == abbreviations[j]:
                         return label
+
+
+def prepare(feature: str, input: any | None) -> any | None:
+    """
+    Expects first a string for the name of the feature to be preprocessed and then uses
+    the second argument as the data to be preprocessed.
+
+    This is a utility function for preprocessing a certain feature dynamically.
+    """
+    feature = feature.lower()
+    if feature == "age":
+        return prepare_age(input)
+    elif feature == "experience":
+        return prepare_experience(input)
+    elif feature == "experience_role":
+        return prepare_experience_role(input)
+    elif feature == "experience_years":
+        return prepare_experience_years(input)
+    elif feature == "hard_skills":
+        return prepare_hard_skills(input)
+    elif feature == "soft_skills":
+        return prepare_soft_skills(input)
+    elif feature == "certifications":
+        return prepare_certifications(input)
+    elif feature == "degree":
+        return prepare_degree(input)
+    elif feature == "training":
+        return prepare_training(input)
+    elif feature == "job_field":
+        return __get_field(input)
+    
+    return None
