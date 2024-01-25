@@ -10,7 +10,7 @@ from datetime import datetime
 from sklearn.metrics.pairwise import cosine_similarity
 
 from .degree_labels import DEGREE_LABELS
-from .experience_roles import EXPERIENCE_ROLES
+from .experience_roles_many import EXPERIENCE_ROLES
 from .baselines import *
 
 # ELMo doesn't support eager execution
