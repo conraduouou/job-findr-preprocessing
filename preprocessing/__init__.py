@@ -198,7 +198,7 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
 
     prepared = {
         "age": [prepare_age(data["age"])],
-        "sex": [data["sex"].lower()],
+        "sex": [data["sex"].lower() if data["sex"] else None],
         "experience": [prepare_experience(data["experience"], job_field)],
         "experience_role": [prepare_experience_role(data["experience_role"])],
         "experience_years": [prepare_experience_years(data["experience_years"])],
