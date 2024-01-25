@@ -6,8 +6,12 @@ import tensorflow as tf
 import os
 import string
 
+import logging
+tf.get_logger().setLevel(logging.ERROR)
+
 from datetime import datetime
 from sklearn.metrics.pairwise import cosine_similarity
+from tqdm import tqdm
 
 from .degree_labels import DEGREE_LABELS
 from .experience_roles_many import EXPERIENCE_ROLES
@@ -263,8 +267,10 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
         df = pd.read_csv(features)
         output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
 
+        progress_bar = tqdm(total=len(output), desc="Preprocessing", unit="record")
+
         # str conversion of features as well as data format preparation
-        clean_output = []
+        prepared = {}
         for resume_data in output:
             entry = {}
             for key, value in resume_data.items():
@@ -275,20 +281,21 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
                 else:
                     final_value = [str(value)]
                 entry[key] = final_value
-            clean_output.append(entry)
+            
+            processed = __get_prepared(entry, is_common, field)
 
-        prepared = {}
-        count = 1
-        for data in clean_output:
-            processed = __get_prepared(data, is_common, field)
             if not prepared:
                 prepared = processed
             else:
                 for key, value in processed.items():
                     prepared[key].extend(value)
             
-            print(f"Finished processing data count #{str(count).rjust(4)}")
-            count += 1
+            progress_bar.update(1)
+        
+        progress_bar.close()
+        print("Task completed!")
+            
+            
     else:
         prepared = __get_prepared(features, is_common, field)
 
