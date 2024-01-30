@@ -212,7 +212,7 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
 
     if is_common:
         del prepared["experience"]
-        del prepared["experience_years"]
+        # del prepared["experience_years"]
         del prepared["hard_skills"]
         del prepared["soft_skills"]
         del prepared["certifications"]
