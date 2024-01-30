@@ -221,7 +221,7 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
     return prepared
 
 
-def prepare_features(features: dict | str, is_common: bool=False, field: str | None=None):
+def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False, field: str | None=None):
     """
     A utility function that runs the individual preprocessing functions and generates
     a csv file containing the values.
@@ -261,8 +261,8 @@ def prepare_features(features: dict | str, is_common: bool=False, field: str | N
         if field not in JOB_FIELDS:
             raise ValueError(f"Field supplied is not supported. This value should only be {JOB_FIELDS}.")
 
-    if type(features) == str:
-        df = pd.read_csv(features)
+    if type(features) == str or type(features) == pd.DataFrame:
+        df = pd.read_csv(features) if type(features) == str else features
         output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
 
         progress_bar = tqdm(total=len(output), desc="Preprocessing", unit="record")
