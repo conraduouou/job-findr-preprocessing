@@ -196,6 +196,13 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
 
         job_field = __get_field(string_features)
 
+    if is_common:
+        data["experience"] = None
+        data["hard_skills"] = None
+        data["soft_skills"] = None
+        data["certifications"] = None
+        data["training"] = None
+
     prepared = {
         "age": [prepare_age(data["age"])],
         "sex": [data["sex"].lower() if data["sex"] else None],
@@ -209,14 +216,6 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
         "training": [prepare_training(data["training"], job_field)],
         "job_field": [job_field],
     }
-
-    if is_common:
-        del prepared["experience"]
-        # del prepared["experience_years"]
-        del prepared["hard_skills"]
-        del prepared["soft_skills"]
-        del prepared["certifications"]
-        del prepared["training"]
 
     return prepared
 
