@@ -124,6 +124,11 @@ def __get_field(resume_data: list[str]) -> str:
     return tuples[max_index][0]
 
 def __get_embeddings(*args: list[str]) -> list[np.ndarray]:
+    """
+    Expects an indefinite amount of lists of strings that will be converted to vectors via ELMo.
+
+    Returns a list of lists following the order by which the arguments are supplied.
+    """
     graph = tf.Graph()
     with graph.as_default():
         # Load ELMo model
@@ -183,6 +188,17 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
 
 
 def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
+    """
+    Utility function for preprocessing values according to `is_common` setting.
+
+    If `is_common` is set to True, all additional attributes are removed from preprocessing and are therefore
+    excluded from the final CSV to be fed to the model.
+
+    Supplying a value, granted that it belongs to the list of supported values, will skip the field getting step
+    from context and will use the supplied field by default. This is useful for shortening prediction times as
+    well as frequent mistakes since vector conversion is not perfect and optimized.
+    """
+
     if field:
         job_field = field
     else:
