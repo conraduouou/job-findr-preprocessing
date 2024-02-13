@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 import pandas as pd
-import silence_tensorflow.auto 
+import silence_tensorflow.auto
 import tensorflow_hub as hub
 import tensorflow as tf
 import os
@@ -18,7 +18,7 @@ from .baselines import *
 # ELMo doesn't support eager execution
 tf.compat.v1.disable_eager_execution()
 
-__CURRENT_STRING_CONSTANTS = [ "current", "present", "now", "cur" ]
+__CURRENT_STRING_CONSTANTS = ["current", "present", "now", "cur"]
 
 __MONTH_CONSTANTS = [
     "january",
@@ -37,14 +37,17 @@ __MONTH_CONSTANTS = [
 
 __ELMO_PATH = "elmo"
 
+
 def __check_elmo_model() -> bool:
     current_dir = os.getcwd()
     elmo_path = os.path.join(current_dir, __ELMO_PATH)
     return os.path.isdir(elmo_path)
 
+
 # check path if elmo model exists
 if not __check_elmo_model():
-    raise FileNotFoundError("A path to a ELMo is required to run this package.")
+    raise FileNotFoundError(
+        "A path to a ELMo is required to run this package.")
 
 # def set_elmo_path(elmo_path: str):
 #     """
@@ -58,11 +61,13 @@ if not __check_elmo_model():
 
 #     elmo = hub.Module(elmo_path)
 
+
 def __has_current_string(value: str) -> bool:
     for word in __CURRENT_STRING_CONSTANTS:
         if word in value:
             return True
     return False
+
 
 def __is_character_surrounded_by_numbers(input_string: str, target_character: str) -> bool:
     index = input_string.find(target_character)
@@ -74,16 +79,19 @@ def __is_character_surrounded_by_numbers(input_string: str, target_character: st
              or input_string[index + 1].isdigit())
     )
 
+
 def __has_month_word(value: str) -> bool:
     for word in __MONTH_CONSTANTS:
         if word in value.lower():
             return True
     return False
 
+
 def __has_month_number(value: str) -> bool:
     if "-" in value or "/" in value:
         return True
-    
+
+
 def __force_parse_int(value: str) -> int:
     """
     Go in a while loop until the value inserted is parsed to integer.
@@ -96,32 +104,51 @@ def __force_parse_int(value: str) -> int:
         try:
             value = int(float(value))
         except ValueError:
-            value = value.strip(string.punctuation + string.whitespace + string.ascii_letters)
+            value = value.strip(string.punctuation +
+                                string.whitespace + string.ascii_letters)
     return abs(value)
 
-def __get_field(resume_data: list[str]) -> str:
-    tuples = list(JOB_FIELDS_BASELINES.items())
-    baseline_statements = [ value for _, value in tuples ]
 
-    resume_embeddings = __get_embeddings(resume_data)[0]
-    statement_embeddings = __get_embeddings(*baseline_statements)
+def __get_field(resume_data: list[str], verbose=False) -> str:
+    field_scores = {key: 0 for key, _ in JOB_FIELDS_KEYWORDS.items()}
 
-    max_score = -2
-    max_index = 0
-    for baseline_index in range(len(statement_embeddings)):
-        statements = statement_embeddings[baseline_index]
-        for statement in statements:
-            baseline_mean = np.reshape(np.mean(statement, axis=0), (1, -1))
-            for item in resume_embeddings:
-                item_mean = np.reshape(np.mean(item, axis=0), (1, -1))
-                similarity = cosine_similarity(baseline_mean, item_mean)
-                similarity = float(similarity.squeeze())
+    # keep track of word frequency count
+    words = 0
+    for statement in resume_data:
+        word_list = statement.split(" ")
 
-                if similarity > max_score:
-                    max_score = similarity
-                    max_index = baseline_index
+        for word in word_list:
+            if word in EXCLUDED_WORDS:
+                continue
 
-    return tuples[max_index][0]
+            words += 1
+
+            if verbose:
+                print(f"processing word number {words}, {word}")
+
+            for key, keyword_list in JOB_FIELDS_KEYWORDS.items():
+                for keyword in keyword_list:
+                    if (word.lower() in keyword):
+                        field_scores[key] += 1
+                        break
+
+    # determine max score index
+    max = 0
+    index = 0
+    for k, v in field_scores.items():
+        if v > max:
+            max = v
+            index = list(field_scores.keys()).index(k)
+
+    if verbose:
+        print(field_scores)
+
+    return JOB_FIELDS[index]
+
+
+# def get_field(resume_data: list[str], verbose=True) -> str:
+#     return __get_field(resume_data, verbose=verbose)
+
 
 def __get_embeddings(*args: list[str]) -> list[np.ndarray]:
     """
@@ -144,10 +171,11 @@ def __get_embeddings(*args: list[str]) -> list[np.ndarray]:
             )["word_emb"]
 
             to_embed.append(to_add)
-        
-        init_op = tf.group([tf.compat.v1.global_variables_initializer(), tf.compat.v1.tables_initializer()])
+
+        init_op = tf.group(
+            [tf.compat.v1.global_variables_initializer(), tf.compat.v1.tables_initializer()])
     graph.finalize()
-    
+
     # Since ELMo doesn't support eager execution, running the `elmo` variable doesn't
     # give us the numpy arrays yet--it has to be run in a session.
     with tf.compat.v1.Session(graph=graph) as session:
@@ -183,11 +211,11 @@ def __get_max_similarity(baselines: list[str], data: list[str]) -> float:
 
             if similarity > max_score:
                 max_score = similarity
-    
+
     return max_score
 
 
-def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
+def __get_prepared(data: dict, is_common=False, field: str | None = None) -> dict:
     """
     Utility function for preprocessing values according to `is_common` setting.
 
@@ -202,7 +230,8 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
     if field:
         job_field = field
     else:
-        features_needed = ["hard_skills", "experience_role", "degree", "experience", "certifications", "training"]
+        features_needed = ["hard_skills", "experience_role",
+                           "degree", "experience", "certifications", "training"]
 
         string_features = []
         for feature in features_needed:
@@ -236,14 +265,14 @@ def __get_prepared(data: dict, is_common=False, field: str | None=None) -> dict:
     return prepared
 
 
-def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False, field: str | None=None):
+def prepare_features(features: dict | str | pd.DataFrame, is_common: bool = False, field: str | None = None):
     """
     A utility function that runs the individual preprocessing functions and generates
     a csv file containing the values.
 
     The `features` argument can either be of type `dict` or `str`. If it's a string, then
     it is assumed to be a path to the csv containing data of a resume per row.
-    
+
     The dictionary to be inputted here as an argument must have the following features as
     string keys, with list values (except for sex):
 
@@ -257,14 +286,14 @@ def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False,
     8. certifications
     9. degree
     10. training
-    
+
     If there are no values found or valid for a specific feature, supply an empty array.
 
     If the data is generated from a csv file, the continuous values will be expected to have
     a phrase or sentence belonging to a feature. These values are experience, experience_role,
     hard_skills, soft_skills, certifications, and training, which are all expected to have
     multiple values in a real life application.
-    
+
     For convenience purposes, the data inputted in the csv are expected to be THE CLOSEST 
     SOUNDING TO BEING PROFESSIONAL, as the numerical value converted from the continuous value
     is acquired through `max` anyway, not the mean. Judge whether each statement is indeed the
@@ -274,13 +303,15 @@ def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False,
     if field != None:
         field = field.lower()
         if field not in JOB_FIELDS:
-            raise ValueError(f"Field supplied is not supported. This value should only be {JOB_FIELDS}.")
+            raise ValueError(
+                f"Field supplied is not supported. This value should only be {JOB_FIELDS}.")
 
     if type(features) == str or type(features) == pd.DataFrame:
         df = pd.read_csv(features) if type(features) == str else features
         output = df.apply(lambda x: x.to_dict(), axis=1).tolist()
 
-        progress_bar = tqdm(total=len(output), desc="Preprocessing", unit="record")
+        progress_bar = tqdm(total=len(output),
+                            desc="Preprocessing", unit="record")
 
         # str conversion of features as well as data format preparation
         prepared = {}
@@ -294,7 +325,7 @@ def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False,
                 else:
                     final_value = [str(value)]
                 entry[key] = final_value
-            
+
             processed = __get_prepared(entry, is_common, field)
 
             if not prepared:
@@ -302,13 +333,12 @@ def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False,
             else:
                 for key, value in processed.items():
                     prepared[key].extend(value)
-            
+
             progress_bar.update(1)
-        
+
         progress_bar.close()
         print("Task completed!")
-            
-            
+
     else:
         prepared = __get_prepared(features, is_common, field)
 
@@ -317,21 +347,22 @@ def prepare_features(features: dict | str | pd.DataFrame, is_common: bool=False,
     ]
 
     to_csv.extend(
-        [ [ prepared[k][i] for k in prepared.keys() ] for i in range(len(prepared["age"])) ]
+        [[prepared[k][i] for k in prepared.keys()]
+         for i in range(len(prepared["age"]))]
     )
 
     result_dir = "preprocessed_result"
-    
+
     if not os.path.exists(result_dir):
         os.makedirs(result_dir)
-    
+
     file_path = os.path.join(result_dir, "result.csv")
 
     with open(file_path, "w", newline='') as csvfile:
         csv_writer = csv.writer(csvfile)
         for row in to_csv:
             csv_writer.writerow(row)
-    
+
 
 def prepare_age(age_strs: list[str] | None) -> int | None:
     """
@@ -367,7 +398,7 @@ def prepare_certifications(cert_array: list[str] | None, field: str) -> str:
         return "FALSE"
     elif len(cert_array) == 1 and "nan" in cert_array:
         return "FALSE"
-    
+
     list = []
     for cert_str in cert_array:
         cert = cert_str.strip(string.punctuation + string.whitespace)
@@ -376,11 +407,11 @@ def prepare_certifications(cert_array: list[str] | None, field: str) -> str:
 
     if len(list) == 0:
         return "FALSE"
-    
-    similarity = __get_max_similarity(JOB_FIELDS_BASELINES[field], list)
+
+    similarity = __get_max_similarity(JOB_FIELDS_KEYWORDS[field], list)
     if similarity < 0.25:
         return "FALSE"
-    
+
     return "TRUE"
 
 
@@ -394,7 +425,7 @@ def prepare_training(training_array: list[str] | None, field: str) -> str:
         return "FALSE"
     elif len(training_array) == 1 and "nan" in training_array:
         return "FALSE"
-    
+
     list = []
     for training_str in training_array:
         training = training_str.strip(string.punctuation + string.whitespace)
@@ -403,11 +434,11 @@ def prepare_training(training_array: list[str] | None, field: str) -> str:
 
     if len(list) == 0:
         return "FALSE"
-    
-    similarity = __get_max_similarity(JOB_FIELDS_BASELINES[field], list)
+
+    similarity = __get_max_similarity(JOB_FIELDS_KEYWORDS[field], list)
     if similarity < 0.25:
         return "FALSE"
-    
+
     return "TRUE"
 
 
@@ -452,8 +483,9 @@ def prepare_experience_years(years_array: list[str]) -> int | None:
                 split_character = " - "
             else:
                 split_character = "-"
-            
-            years = [ year.strip(string.punctuation) for year in value.split(split_character) ]
+
+            years = [year.strip(string.punctuation)
+                     for year in value.split(split_character)]
 
             # We're essentially expecting a range between two values. If what we got from splitting
             # the string were more, then we'll have to assume it's a failed parse.
@@ -493,7 +525,7 @@ def prepare_experience_years(years_array: list[str]) -> int | None:
             # may have to assume that the applicant stated his total years of experience.
             elif value > 0:
                 summary_years = value
-    
+
     return max(experience_years, summary_years)
 
 
@@ -510,7 +542,7 @@ def prepare_experience(experience_array: list[str] | None, field: str) -> float 
     # Return nil if array does not contain anything or if it's None
     if not experience_array or len(experience_array) == 0 or field not in JOB_FIELDS:
         return None
-    
+
     list = []
 
     # clean data
@@ -538,7 +570,7 @@ def prepare_hard_skills(hard_array: list[str] | None, field: str) -> float | Non
     # Return nil if array does not contain anything or if it's None
     if not hard_array or len(hard_array) == 0 or field not in JOB_FIELDS:
         return None
-    
+
     list = []
 
     # clean data
@@ -566,7 +598,7 @@ def prepare_soft_skills(soft_array: list[str] | None, field: str) -> float | Non
     # Return nil if array does not contain anything or if it's None
     if not soft_array or len(soft_array) == 0 or field not in JOB_FIELDS:
         return None
-    
+
     list = []
 
     # clean data
@@ -594,15 +626,16 @@ def prepare_experience_role(role_array: list[str] | None) -> str | None:
     # Return nil if array does not contain anything or if it's None
     if not role_array or len(role_array) == 0:
         return None
-    
+
     for role in role_array:
         while True:
-            temp_role = role.strip(string.punctuation + string.digits + string.whitespace).lower()
+            temp_role = role.strip(
+                string.punctuation + string.digits + string.whitespace).lower()
             if role != temp_role:
                 role = temp_role
             else:
                 break
-            
+
         words = role.strip(string.punctuation + string.digits).lower().split()
         word_count = len(words)
 
@@ -617,11 +650,11 @@ def prepare_experience_role(role_array: list[str] | None) -> str | None:
                         if name_tokens[j] != words[index + j]:
                             is_match = False
                             break
-                    
+
                     if is_match:
                         return label
 
-    
+
 def prepare_degree(degree_strs: list[str] | None) -> str | None:
     """
     Expects a string that contains information regarding the applicant's finished course.
@@ -635,16 +668,18 @@ def prepare_degree(degree_strs: list[str] | None) -> str | None:
     # Return nil if array does not contain anything or if it's None
     if not degree_strs or len(degree_strs) == 0:
         return None
-    
+
     for degree_str in degree_strs:
         while True:
-            temp_str = degree_str.strip(string.punctuation + string.digits + string.whitespace).lower()
+            temp_str = degree_str.strip(
+                string.punctuation + string.digits + string.whitespace).lower()
             if degree_str != temp_str:
                 degree_str = temp_str
             else:
                 break
-        
-        words = degree_str.strip(string.punctuation + string.digits).lower().split()
+
+        words = degree_str.strip(
+            string.punctuation + string.digits).lower().split()
         word_count = len(words)
 
         for index in range(word_count):
@@ -661,13 +696,13 @@ def prepare_degree(degree_strs: list[str] | None) -> str | None:
                         if name_tokens[j] != words[index + j]:
                             is_match = False
                             break
-                    
+
                     if is_match:
                         return label
-                
+
                 # check if current word is in abbreviated form, in which case the
                 # label should be returned as well.
-                for j in range(len(abbreviations)): 
+                for j in range(len(abbreviations)):
                     if current_word == abbreviations[j]:
                         return label
 
@@ -700,5 +735,5 @@ def prepare(feature: str, input) -> None:
         return prepare_training(input)
     elif feature == "job_field":
         return __get_field(input)
-    
+
     return None
