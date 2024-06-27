@@ -1,0 +1,4 @@
+Metric,T-statistic,Critical value,Is significant
+Precision,1.9738818840910721,1.697,True
+Recall,1.7130579295574884,1.697,True
+F1-Score,3.3372528379865734,1.697,True

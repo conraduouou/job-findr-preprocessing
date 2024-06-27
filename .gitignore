@@ -1,4 +1,5 @@
 # Ignore everything...
+.DS_Store
 *
 
 # ... except
@@ -11,3 +12,5 @@
 !LICENSE
 !test.csv
 !packages.txt
+!performance
+!performance/**
